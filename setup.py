@@ -11,9 +11,8 @@ setup(
     license='GPL-3.0',
     packages= find_packages()+['data'],
     install_requires=['geopandas',
-                      'pandas',
                       'numpy', 
-                      'shapey',
+                      'shapely',
                       'tqdm'
                       ],
     keywords='OpenStreetMap',
