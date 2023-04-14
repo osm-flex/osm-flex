@@ -125,7 +125,8 @@ def _shapely2poly(geom_list, filename, save_path=POLY_DIR):
 
     # loop over the different polygons, get their exterior and write the
     # coordinates of the ring to the .poly file
-    for i, shape in enumerate(geom_list):
+    i = 0
+    for shape in geom_list:
         if shape.geom_type == 'MultiPolygon':
             polygons = shape.geoms
         elif shape.geom_type == 'Polygon':
@@ -134,7 +135,7 @@ def _shapely2poly(geom_list, filename, save_path=POLY_DIR):
         for polygon in polygons:
             polygon = np.array(polygon.exterior.coords)
             file.write(str(i) + "\n")
-
+            i += 1
             for ring in polygon:
                 file.write("    " + str(ring[0]) + "     " + str(ring[1]) +"\n")
 
@@ -213,7 +214,7 @@ def _osmosis_clip(shape, path_parentfile, path_clip,
      return None
 
 
-def clip_from_bbox(bbox, path_clip, 
+def clip_from_bbox(bbox, path_clip,
                    path_parentfile=Path(POLY_DIR, 'planet-latest.osm.pbf'),
                    overwrite=False):
      """
