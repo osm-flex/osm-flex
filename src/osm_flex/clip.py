@@ -12,8 +12,8 @@ import shapely
 import subprocess
 from cartopy.io import shapereader
 
+from osm_flex.config import POLY_DIR
 LOGGER = logging.getLogger(__name__)
-DATA_DIR = '' #TODO: what should be default data dir? create one in parent dir. eg. osm-data? and put in constants (though rather config?)
 
 # Elco originally used GADM36 country & adminX files etc. -->
 # see osm_clipper repo.
@@ -158,17 +158,17 @@ def _shapely2poly(geom_list, path_save_poly):
 # include both and let user choose which one run under the hood? or just osmconvert.
 # osm_clipper for respective functions.
 
-def _build_osmosis_cmd(shape, path_parentfile, path_extract):
+def _build_osmosis_cmd(shape, path_parentfile, path_clip):
 
      if isinstance(shape[0], (float, int)):
          return['osmosis', '--read-pbf', 'file='+str(path_parentfile),
                 '--bounding-box', f'top={shape[3]}', f'left={shape[0]}',
                 f'bottom={shape[1]}', f'right={shape[2]}',
-                '--write-pbf', 'file='+str(path_extract)]
+                '--write-pbf', 'file='+str(path_clip)]
      if isinstance(shape[0], str):
          return ['osmosis', '--read-pbf', 'file='+str(path_parentfile),
                 '--bounding-polygon', 'file='+shape, '--write-pbf',
-                'file='+str(path_extract)]
+                'file='+str(path_clip)]
 
      raise ValueError('''shape does not have the correct format.
                            Only bounding boxes or filepaths to .poly
@@ -176,7 +176,7 @@ def _build_osmosis_cmd(shape, path_parentfile, path_extract):
 
 # TODO: all functions here should be called clip not extract, to be consistent with
 # terminology (clipping = cutting, extracting = parsing)
-def _osmosis_extract(shape, path_parentfile, path_extract,
+def _osmosis_clip(shape, path_parentfile, path_clip,
                       overwrite=False):
      """
      Runs the command line tool osmosis to cut out all map info within
@@ -193,7 +193,7 @@ def _osmosis_extract(shape, path_parentfile, path_extract,
          a string to the .poly file path delimiting the bounds.
      path_parentfile : str or pathlib.Path
          file path to planet.osm.pbf or other osm.pbf file to extract from
-     path_extract : str or pathlib.Path
+     path_clip : str or pathlib.Path
          file path (incl. name & ending osm.pbf) under which extract will be stored
      overwrite : bool
          default is False. Whether to overwrite files if they already exist.
@@ -203,13 +203,13 @@ def _osmosis_extract(shape, path_parentfile, path_extract,
      None or subprocess
      """
 
-     if ((not Path(path_extract).is_file()) or
-         (Path(path_extract).is_file() and overwrite)):
+     if ((not Path(path_clip).is_file()) or
+         (Path(path_clip).is_file() and overwrite)):
 
          LOGGER.info("""File doesn`t yet exist or overwriting old one.
                      Assembling osmosis command.""")
 
-         cmd = _build_osmosis_cmd(shape, path_parentfile, path_extract)
+         cmd = _build_osmosis_cmd(shape, path_parentfile, path_clip)
 
          LOGGER.info('''Extracting from larger file...
                      This will take a while''')
@@ -221,9 +221,9 @@ def _osmosis_extract(shape, path_parentfile, path_extract,
      return None
 
 
-def extract_from_bbox(bbox, path_extract,
-                       path_parentfile=Path(DATA_DIR, 'planet-latest.osm.pbf'),
-                       overwrite=False):
+def clip_from_bbox(bbox, path_clip, 
+                   path_parentfile=Path(POLY_DIR, 'planet-latest.osm.pbf'),
+                   overwrite=False):
      """
      get OSM raw data from abounding-box, which is extracted
      from a bigger (e.g. the planet) file.
@@ -232,7 +232,7 @@ def extract_from_bbox(bbox, path_extract,
      ----------
      bbox : list
          bounding box [xmin, ymin, xmax, ymax]
-     path_extract : str or pathlib.Path
+     path_clip : str or pathlib.Path
          file path (incl. name & ending) under which extract will be stored
      path_planet : str or pathlib.Path
          file path to planet-latest.osm.pbf. Will download & store it as
@@ -248,16 +248,14 @@ def extract_from_bbox(bbox, path_extract,
      Installation instructions (windows, linux, apple) - see
      https://wiki.openstreetmap.org/wiki/Osmosis/Installation
      """
-     #TODO: don't automatically download planet file (60GB) when parent file doesnt exist
      if not Path(path_parentfile).is_file():
-         LOGGER.info("Paret file wasn't found. Downloading planet file.")
-         get_data_planet(path_parentfile)
-     _osmosis_extract(bbox, path_parentfile, path_extract, overwrite)
+         LOGGER.error("Paret file wasn't found.")
+     _osmosis_clip(bbox, path_parentfile, path_clip, overwrite)
 
 
-def extract_from_poly(path_poly, path_extract,
-                       path_parentfile=Path(DATA_DIR, 'planet-latest.osm.pbf'),
-                       overwrite=False):
+def clip_from_poly(path_poly, path_clip,
+                   path_parentfile=Path(POLY_DIR, 'planet-latest.osm.pbf'),
+                   overwrite=False):
      """
      get OSM raw data from a custom shape defined in .poly file which is extracted
      from the entire OSM planet file. Accepts path to
@@ -267,7 +265,7 @@ def extract_from_poly(path_poly, path_extract,
      ----------
      path_poly : str
          file path to a .poly file
-     path_extract : str or pathlib.Path
+     path_clip : str or pathlib.Path
          file path (incl. name & ending) under which extract will be stored
      path_parentfile : str or pathlib.Path
          file path to planet-latest.osm.pbf. Will download & store it as
@@ -286,11 +284,11 @@ def extract_from_poly(path_poly, path_extract,
 
      if not Path(path_parentfile).is_file():
          LOGGER.warning("Parent file wasn't found.")
-     _osmosis_extract(path_poly, path_parentfile, path_extract,
+     _osmosis_clip(path_poly, path_parentfile, path_clip,
                            overwrite)
 
-def extract_from_shapes(shape_list, path_poly, path_extract,
-                         path_parentfile=Path(DATA_DIR, 'planet-latest.osm.pbf'),
+def clip_from_shapes(shape_list, path_poly, path_clip,
+                         path_parentfile=Path(POLY_DIR, 'planet-latest.osm.pbf'),
                          overwrite=False):
      """
      get OSM raw data from a custom shape defined by a list of polygons
@@ -303,7 +301,7 @@ def extract_from_shapes(shape_list, path_poly, path_extract,
      shape_list : list
          list of (Multi-)Polygon(s) that define the shape which should be cut,
          as e.g. obtained
-     path_extract : str or pathlib.Path
+     path_clip : str or pathlib.Path
          file path (incl. name & ending) under which extract will be stored
      path_poly : str
          file path under which the .poly file should be stored that is created
@@ -329,5 +327,5 @@ def extract_from_shapes(shape_list, path_poly, path_extract,
 
      shape_list = _simplify_shapelist(shape_list)
      _shapely2poly(shape_list, path_poly)
-     _osmosis_extract(path_poly, path_parentfile, path_extract,
+     _osmosis_clip(path_poly, path_parentfile, path_clip,
                            overwrite)
