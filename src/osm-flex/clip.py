@@ -10,22 +10,71 @@ import os
 from pathlib import Path
 import shapely
 import subprocess
+from cartopy.io import shapereader
 
 LOGGER = logging.getLogger(__name__)
 DATA_DIR = '' #TODO: what should be default data dir? create one in parent dir. eg. osm-data? and put in constants (though rather config?)
 
-
-# TODO: this uses the climada util function to get country outlines, 
 # Elco originally used GADM36 country & adminX files etc. -->
 # see osm_clipper repo.
-def get_country_shapelist(cntry_name):
+
+def get_admin1_shapes(country):
+    """Provide Natural Earth registry info and shape files for countries
+
+    Parameters
+    ----------
+    country : str
+        string of ISO 3166 code
+
+    Returns
+    -------
+    country_shapes : dict
+        Shapes (according to Natural Earth) of admin1 regions of country
+        with name as keys
     """
-    cntry_name : str
-        Country name (full) or ISO3 code
+
+    if not isinstance(countries, str):
+        LOGGER.error("country needs to be of type str")
+        raise TypeError("Invalid type for input parameter 'country'")
+    admin1_file = shapereader.natural_earth(resolution='10m',
+                                            category='cultural',
+                                            name='admin_1_states_provinces')
+    admin1_recs = shapereader.Reader(admin1_file)
+    admin1_shapes = {}
+    for rec in admin1_recs.records():
+        if rec.attributes['adm0_a3'] == country:
+            name = rec.attributes['name_en']
+            admin1_shapes[name] = rec.geometry
+    if not admin1_shapes:
+        raise LookupError(f'natural_earth records are empty for country {country}')
+    return admin1_shapes
+
+def get_country_shape(country):
+    """Provide Natural Earth registry info and shape files for admin1 regions
+    of chosen country
+
+    Parameters
+    ----------
+    country : str
+        string of ISO 3166 code
+
+    Returns
+    -------
+    country_shape : (multi-)polygon
+        Shape of the country according to Natural Earth.
     """
-    iso3 = u_coords.country_to_iso(cntry_name)
-    __, cntry_shape = u_coords.get_admin1_info([iso3])
-    return cntry_shape[iso3]
+
+    if not isinstance(country, str):
+        LOGGER.error("country needs to be of type str")
+        raise TypeError("Invalid type for input parameter 'country'")
+    admin0_file = shapereader.natural_earth(resolution='10m',
+                                            category='cultural',
+                                            name='admin_0_countries')
+    admin0_recs = shapereader.Reader(admin0_file)
+    for rec in admin0_recs.records():
+        if rec.attributes['ADM0_A3'] == country:
+            return rec.geometry
+    raise LookupError(f'natural_earth records are empty for country {country}')
 
 
 def _simplify_shapelist(geom_list):
