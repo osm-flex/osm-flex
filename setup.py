@@ -12,7 +12,9 @@ setup(
     packages= find_packages()+['data'],
     install_requires=['geopandas',
                       'pandas',
-                      'numpy',                     
+                      'numpy', 
+                      'shapey',
+                      'tqdm'
                       ],
     keywords='OpenStreetMap',
     classifiers=[

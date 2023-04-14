@@ -21,10 +21,9 @@ gdal.SetConfigOption("OSM_CONFIG_FILE", str(OSM_CONFIG_FILE))
 
 def _query_builder( geo_type, constraint_dict):
     """
-    from BenDickens/trails repo (https://github.com/BenDickens/trails.git, see
-                                 extract.py)
+    from https://github.com/ElcoK/trails, see extract.py)
     This function builds an SQL query from the values passed to the retrieve()
-    function.
+    function.s
 
     Parameters
     ---------
@@ -51,8 +50,6 @@ def retrieve(osm_path, geo_type, osm_keys, osm_query):
     Function to extract geometries and tag info for entires in the OSM file
     matching certain OSM key-value constraints.
     from an OpenStreetMap osm.pbf file.
-    adapted from BenDickens/trails repo
-    (https://github.com/BenDickens/trails.git, see extract.py)
 
     Parameters
     ----------

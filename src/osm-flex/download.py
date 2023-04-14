@@ -52,12 +52,12 @@ def _create_gf_download_url(iso3, file_format):
 
     return LOGGER.error('invalid file format. Please choose one of [shp, pbf]')
 
-# TODO: rename to get_country_geofabrik; include an override=False kwarg
 # TODO: decide whether to issue warnings for multi-country files
-def get_data_geofabrik(iso3, file_format='pbf', save_path=DATA_DIR):
+def get_country_geofabrik(iso3, file_format='pbf', save_path=DATA_DIR,
+                        overwrite=False):
     """
     Download country files with all OSM map info from the provider
-    Geofabrik.de, if doesn't exist, yet.
+    Geofabrik.de.
 
     Parameters
     ----------
@@ -86,19 +86,37 @@ def get_data_geofabrik(iso3, file_format='pbf', save_path=DATA_DIR):
 
     download_url = _create_gf_download_url(iso3, file_format)
     local_filepath = Path(save_path , download_url.split('/')[-1])
-    if not Path(local_filepath).is_file():
+    if not Path(local_filepath).is_file() or overwrite:
         LOGGER.info(f'Downloading file as {local_filepath}')
         urllib.request.urlretrieve(download_url, local_filepath)
     else:
         LOGGER.info(f'file already exists as {local_filepath}')
 
-# TODO: write up
-def get_region_geofabrik(iso3, file_format='pbf', save_path=DATA_DIR):
-    pass
+def get_region_geofabrik(region, save_path=DATA_DIR, overwrite=False):
+    """
+    Download regions files with all OSM map info from the provider
+    Geofabrik.de
     
+    Parameters
+    ----------
+    region: str
+        one of Africa, Antarctica, Asia, Australia-and-Oceania,
+        Central-America, Europe, North-America, South-America
+    save_path : str or pathlib.Path
+        Folder in which to save the file
+    """
+
+    download_url =  f'{GEOFABRIK_URL}{region.lower()}-latest.osm.pbf'
+    local_filepath = Path(save_path , download_url.split('/')[-1])
+    if not Path(local_filepath).is_file() or overwrite:
+        LOGGER.info(f'Downloading file as {local_filepath}')
+        urllib.request.urlretrieve(download_url, local_filepath)
+    else:
+        LOGGER.info(f'file already exists as {local_filepath}')
 
 
-def get_data_planet(save_path=Path(DATA_DIR,'planet-latest.osm.pbf')):
+def get_planet_file(save_path=Path(DATA_DIR,'planet-latest.osm.pbf'),
+                    overwrite=False):
     """
     Download the entire planet file from the OSM server (ca. 60 GB).
 
@@ -107,7 +125,7 @@ def get_data_planet(save_path=Path(DATA_DIR,'planet-latest.osm.pbf')):
     save_path : str or pathlib.Path
     """
 
-    if not Path(save_path).is_file():
+    if not Path(save_path).is_file() or overwrite:
         LOGGER.info(f'Downloading file as {save_path}')
         urllib.request.urlretrieve(PLANET_URL, save_path)
     else:
