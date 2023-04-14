@@ -6,11 +6,11 @@ clipping functions
 
 import logging
 import numpy as np
-import os
 from pathlib import Path
 import shapely
 import subprocess
 from cartopy.io import shapereader
+from .config import POLY_DIR
 
 from osm_flex.config import POLY_DIR
 LOGGER = logging.getLogger(__name__)
@@ -77,31 +77,33 @@ def get_country_shape(country):
     raise LookupError(f'natural_earth records are empty for country {country}')
 
 
-def _simplify_shapelist(geom_list):
+def _simplify_shapelist(geom_list, thres=None):
     """
     remove tiny shapes and simplify outlines to save on file size for
     .poly files
     """
-    thresh = 0.1 if shapely.ops.unary_union(geom_list).area > 1 else 0.01
+    if thres is None:
+        thresh = 0.1 if shapely.ops.unary_union(geom_list).area > 1 else 0.01
     geom_list = [geom for geom in geom_list if geom.area>thresh]
     return [geom.simplify(tolerance=0.01, preserve_topology=True) for
             geom in geom_list]
 
 
-def _shapely2poly(geom_list, path_save_poly):
+def _shapely2poly(geom_list, filename, save_path=POLY_DIR):
     """
     Convert list of shapely (multi)polygon(s) into .poly files needed for
     osmosis to generate cut-outs from bigger osm.pbf files
-    Saves the hence created file under path_save_poly.
+    Saves the hence created file under save_path.
 
     Parameters
     ---------
     geom_list : list
         list of polygon, polygons or multipolygons containing a (complex) shape
         to be cut out of a bigger file
-    path_save_poly : str
-        path (incl. .poly file extension) under which the created file is to be
-        stored
+    filename : str
+        filename
+    save_path : pathlib.Path or str
+        path under which the created file is to bestored
 
     Returns
     -------
@@ -112,25 +114,18 @@ def _shapely2poly(geom_list, path_save_poly):
     For more info on what .poly files are (incl. several tools for
     creating them), see
     https://wiki.openstreetmap.org/wiki/Osmosis/Polygon_Filter_File_Format
-
-    For creating .poly files on admin0 to admin3 levels of any place on the
-    globe, see the GitHub repo https://github.com/ElcoK/osm_clipper
-    (especially the function make_poly_file(), on which also this code draws)
     """
-
-    if os.path.exists(path_save_poly):
-        LOGGER.info('.poly file already exists, aborting.')
-        return None
+    filename = Path(save_path).joinpath(filename).with_suffix('.poly')
+    if filename.exists():
+        raise ValueError(f'File {filename} already exists, aborting.')
 
     # start writing the .poly file
-    file = open(path_save_poly, 'w')
+    file = open(filename, 'w')
     file.write('Polygons' + "\n")
-
-    i = 0
 
     # loop over the different polygons, get their exterior and write the
     # coordinates of the ring to the .poly file
-    for shape in geom_list:
+    for i, shape in enumerate(geom_list):
         if shape.geom_type == 'MultiPolygon':
             polygons = shape.geoms
         elif shape.geom_type == 'Polygon':
@@ -138,14 +133,11 @@ def _shapely2poly(geom_list, path_save_poly):
 
         for polygon in polygons:
             polygon = np.array(polygon.exterior.coords)
-            j = 0
             file.write(str(i) + "\n")
 
             for ring in polygon:
-                j = j + 1
                 file.write("    " + str(ring[0]) + "     " + str(ring[1]) +"\n")
 
-            i = i + 1
             # close the ring of one subpolygon if done
             file.write("END" +"\n")
 
