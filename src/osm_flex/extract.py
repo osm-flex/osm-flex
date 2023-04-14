@@ -130,55 +130,51 @@ def retrieve(osm_path, geo_type, osm_keys, osm_query):
         features, columns=['osm_id', *constraint_dict['osm_keys'], 'geometry'],
         crs='epsg:4326')
 
-# TODO: decide on name of wrapper. 
-# TODO: decide on which categories included & what components fall under it.
-# TODO: update with most recent categories from nw and osm_paper feature branches!
-def retrieve_cis(osm_path, ci_type):
+# TODO: decide on name of wrapper, which categories included & what components fall under it.
+def retrieve_cis(self, ci_type):
     """
     A wrapper around retrieve() to conveniently retrieve map info for a
     selection of  critical infrastructure types from the given osm.pbf file.
     No need to search for osm key/value tags and relevant geometry types.
-
     Parameters
     ----------
     ci_type : str
         one of DICT_CIS_OSM.keys(), i.e. 'education', 'healthcare',
         'water', 'telecom', 'road', 'rail', 'air', 'gas', 'oil', 'power',
         'wastewater', 'food'
-
     See also
     -------
     DICT_CIS_OSM for the keys and key/value tags queried for the respective
     CIs. Modify if desired.
     """
     # features consisting in points and multipolygon results:
-    if ci_type in ['healthcare','education','food', 'buildings']:
-        gdf = retrieve(osm_path, 'points', DICT_CIS_OSM[ci_type]['osm_keys'],
+    if ci_type in ['healthcare','education','primary_education', 'food',
+                   'buildings', 'power_components']:
+        gdf = self.retrieve('points', DICT_CIS_OSM[ci_type]['osm_keys'],
                              DICT_CIS_OSM[ci_type]['osm_query'])
         gdf = gdf.append(
-            retrieve(osm_path, 'multipolygons', DICT_CIS_OSM[ci_type]['osm_keys'],
+            self.retrieve('multipolygons', DICT_CIS_OSM[ci_type]['osm_keys'],
                           DICT_CIS_OSM[ci_type]['osm_query']))
 
     # features consisting in multipolygon results:
     elif ci_type in ['air']:
-        gdf = retrieve(osm_path, 'multipolygons', 
-                       DICT_CIS_OSM[ci_type]['osm_keys'],
-                       DICT_CIS_OSM[ci_type]['osm_query'])
+        gdf = self.retrieve('multipolygons', DICT_CIS_OSM[ci_type]['osm_keys'],
+                             DICT_CIS_OSM[ci_type]['osm_query'])
 
     # features consisting in points, multipolygons and lines:
     elif ci_type in ['gas','oil','telecom','water','wastewater','power',
-                     'rail','road', 'main_road']:
-        gdf = retrieve(osm_path, 'points', 
-                       DICT_CIS_OSM[ci_type]['osm_keys'],
-                       DICT_CIS_OSM[ci_type]['osm_query'])
+                     'rail']:
+        gdf = self.retrieve('points', DICT_CIS_OSM[ci_type]['osm_keys'],
+                             DICT_CIS_OSM[ci_type]['osm_query'])
         gdf = gdf.append(
-            retrieve(osm_path, 'multipolygons', 
-                     DICT_CIS_OSM[ci_type]['osm_keys'],
-                     DICT_CIS_OSM[ci_type]['osm_query']))
+            self.retrieve('multipolygons', DICT_CIS_OSM[ci_type]['osm_keys'],
+                             DICT_CIS_OSM[ci_type]['osm_query']))
         gdf = gdf.append(
-            retrieve(osm_path, 'lines', 
-                     DICT_CIS_OSM[ci_type]['osm_keys'],
-                     DICT_CIS_OSM[ci_type]['osm_query']))
+            self.retrieve('lines', DICT_CIS_OSM[ci_type]['osm_keys'],
+                             DICT_CIS_OSM[ci_type]['osm_query']))
+    elif ci_type in ['road', 'main_road']:
+        gdf = self.retrieve('lines', DICT_CIS_OSM[ci_type]['osm_keys'],
+                             DICT_CIS_OSM[ci_type]['osm_query'])
     else:
         LOGGER.warning('feature not in DICT_CIS_OSM. Returning empty gdf')
         gdf = gpd.GeoDataFrame()
