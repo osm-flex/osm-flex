@@ -89,7 +89,7 @@ def _simplify_shapelist(geom_list, thres=None):
             geom in geom_list]
 
 
-def _shapely2poly(geom_list, filename, save_path=POLY_DIR):
+def _shapely2poly(geom_list, filename):
     """
     Convert list of shapely (multi)polygon(s) into .poly files needed for
     osmosis to generate cut-outs from bigger osm.pbf files
@@ -100,10 +100,8 @@ def _shapely2poly(geom_list, filename, save_path=POLY_DIR):
     geom_list : list
         list of polygon, polygons or multipolygons containing a (complex) shape
         to be cut out of a bigger file
-    filename : str
-        filename
-    save_path : pathlib.Path or str
-        path under which the created file is to bestored
+    filename : pathlib.Path str
+        filename with directory path.
 
     Returns
     -------
@@ -115,7 +113,7 @@ def _shapely2poly(geom_list, filename, save_path=POLY_DIR):
     creating them), see
     https://wiki.openstreetmap.org/wiki/Osmosis/Polygon_Filter_File_Format
     """
-    filename = Path(save_path).joinpath(filename).with_suffix('.poly')
+    filename = Path(filename).with_suffix('.poly')
     if filename.exists():
         raise ValueError(f'File {filename} already exists, aborting.')
 
