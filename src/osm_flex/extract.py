@@ -11,7 +11,7 @@ from pathlib import Path
 import shapely
 from tqdm import tqdm
 
-from config import DICT_CIS_OSM, OSM_CONFIG_FILE
+from osm_flex.config import DICT_CIS_OSM, OSM_CONFIG_FILE
 
 
 LOGGER = logging.getLogger(__name__)

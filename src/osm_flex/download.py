@@ -7,7 +7,7 @@ downloading functions
 import logging
 from pathlib import Path
 import urllib.request
-from config import DICT_GEOFABRIK, GEOFABRIK_URL, PLANET_URL, OSM_DATA_DIR
+from osm_flex.config import DICT_GEOFABRIK, GEOFABRIK_URL, PLANET_URL, OSM_DATA_DIR
 
 LOGGER = logging.getLogger(__name__)
 
