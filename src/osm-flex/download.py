@@ -7,10 +7,9 @@ downloading functions
 import logging
 from pathlib import Path
 import urllib.request
-from .constants import GEOFABRIK_URL, PLANET_URL, DICT_GEOFABRIK
+from .config import DICT_GEOFABRIK, GEOFABRIK_URL, PLANET_URL, OSM_DATA_DIR
 
 LOGGER = logging.getLogger(__name__)
-DATA_DIR = '' #TODO: what should be default data dir? create one in parent dir. eg. osm-data? and put in constants (though rather config?)
 
 # =============================================================================
 #  DOWNLOAD METHODS
@@ -53,8 +52,8 @@ def _create_gf_download_url(iso3, file_format):
     return LOGGER.error('invalid file format. Please choose one of [shp, pbf]')
 
 # TODO: decide whether to issue warnings for multi-country files
-def get_country_geofabrik(iso3, file_format='pbf', save_path=DATA_DIR,
-                        overwrite=False):
+def get_country_geofabrik(iso3, file_format='pbf', save_path=OSM_DATA_DIR,
+                          overwrite=False):
     """
     Download country files with all OSM map info from the provider
     Geofabrik.de.
@@ -92,7 +91,7 @@ def get_country_geofabrik(iso3, file_format='pbf', save_path=DATA_DIR,
     else:
         LOGGER.info(f'file already exists as {local_filepath}')
 
-def get_region_geofabrik(region, save_path=DATA_DIR, overwrite=False):
+def get_region_geofabrik(region, save_path=OSM_DATA_DIR, overwrite=False):
     """
     Download regions files with all OSM map info from the provider
     Geofabrik.de
@@ -115,7 +114,7 @@ def get_region_geofabrik(region, save_path=DATA_DIR, overwrite=False):
         LOGGER.info(f'file already exists as {local_filepath}')
 
 
-def get_planet_file(save_path=Path(DATA_DIR,'planet-latest.osm.pbf'),
+def get_planet_file(save_path=Path(OSM_DATA_DIR,'planet-latest.osm.pbf'),
                     overwrite=False):
     """
     Download the entire planet file from the OSM server (ca. 60 GB).
