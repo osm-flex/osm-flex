@@ -137,7 +137,7 @@ def _shapely2poly(geom_list, path_save_poly):
             polygons = [shape]
 
         for polygon in polygons:
-            polygon = np.array(polygon.exterior)
+            polygon = np.array(polygon.exterior.coords)
             j = 0
             file.write(str(i) + "\n")
 
@@ -285,8 +285,7 @@ def extract_from_poly(path_poly, path_extract,
      """
 
      if not Path(path_parentfile).is_file():
-         LOGGER.info("Parent file wasn't found. Downloading planet file.")
-         get_data_planet(path_parentfile)
+         LOGGER.warning("Parent file wasn't found.")
      _osmosis_extract(path_poly, path_parentfile, path_extract,
                            overwrite)
 
@@ -326,8 +325,7 @@ def extract_from_shapes(shape_list, path_poly, path_extract,
 
      if not Path(path_parentfile).is_file():
          #TODO: same here.
-         LOGGER.info("Parent file wasn't found. Downloading planet file.")
-         get_data_planet(path_parentfile)
+         LOGGER.error("Parent file wasn't found.")
 
      shape_list = _simplify_shapelist(shape_list)
      _shapely2poly(shape_list, path_poly)
