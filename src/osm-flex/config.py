@@ -10,9 +10,10 @@ from pathlib import Path
 # FILE AND FOLDER PATHS
 # =============================================================================
 OSM_CONFIG_FILE = Path(__file__).parent.joinpath('osmconf.ini')
-OSM_DATA_PATH = "~/osm/osm_bpf"
-POLY_PATH = "~/osm/poly"
-SAVE_PATH = "~/osm/extracts"
+OSM_DIR = Path(Path.home(), 'osm')
+OSM_DATA_DIR = OSM_DIR.joinpath("osm_bpf")
+POLY_DIR = OSM_DIR.joinpath("poly")
+EXTRACT_DIR = OSM_DIR.joinpath("extracts")
 
 # =============================================================================
 # URLS
