@@ -33,7 +33,7 @@ def get_admin1_shapes(country):
         with name as keys
     """
 
-    if not isinstance(countries, str):
+    if not isinstance(country, str):
         LOGGER.error("country needs to be of type str")
         raise TypeError("Invalid type for input parameter 'country'")
     admin1_file = shapereader.natural_earth(resolution='10m',
