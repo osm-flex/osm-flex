@@ -276,12 +276,11 @@ def clip_from_poly(path_poly, path_clip,
 
      if not Path(path_parentfile).is_file():
          LOGGER.warning("Parent file wasn't found.")
-     _osmosis_clip(path_poly, path_parentfile, path_clip,
-                           overwrite)
+     _osmosis_clip(path_poly, path_parentfile, path_clip, overwrite)
 
 def clip_from_shapes(shape_list, path_poly, path_clip,
-                         path_parentfile=Path(POLY_DIR, 'planet-latest.osm.pbf'),
-                         overwrite=False):
+                     path_parentfile=Path(POLY_DIR, 'planet-latest.osm.pbf'),
+                     overwrite=False):
      """
      get OSM raw data from a custom shape defined by a list of polygons
      which is extracted from the entire OSM planet file.
@@ -314,7 +313,6 @@ def clip_from_shapes(shape_list, path_poly, path_clip,
      """
 
      if not Path(path_parentfile).is_file():
-         #TODO: same here.
          LOGGER.error("Parent file wasn't found.")
 
      shape_list = _simplify_shapelist(shape_list)
