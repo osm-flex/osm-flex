@@ -11,11 +11,9 @@ import shapely
 import subprocess
 from cartopy.io import shapereader
 
-from osm_flex.config import POLY_DIR, OSM_DATA_DIR
+from osm_flex.config import POLY_DIR
 LOGGER = logging.getLogger(__name__)
 
-# Elco originally used GADM36 country & adminX files etc. -->
-# see osm_clipper repo.
 
 def get_admin1_shapes(country):
     """Provide Natural Earth registry info and shape files for countries
@@ -142,23 +140,29 @@ def _shapely2poly(geom_list, filename):
     file.write("END" +"\n")
     file.close()
 
-
-# TODO: clipping functions included only for osmosis. add osmconvert analogs.
-def _build_osmosis_cmd(shape, path_parentfile, path_clip):
+def _build_osmosis_cmd(shape, osmpbf_clip_from, osmpbf_output):
+    """
+    builds osmosis command for clipping
     
-    if isinstance(shape, pathlib.PosixPath):
-        return ['osmosis', '--read-pbf', 'file='+str(path_parentfile),
+    Parameters
+    -----------
+    shape : list or str or pathlib.Path
+        list containing [xmin, ymin, xmax, ymax] for a bounding box or
+        a string/Path to the .poly file path delimiting the bounds.
+    osmpbf_clip_from: str or pathlib.Path
+        file path to planet.osm.pbf or other osm.pbf file to clip
+    osmpbf_output : str or pathlib.Path
+        file path (incl. name & ending) under which extract will be stored
+    """
+    if isinstance(shape, (pathlib.PosixPath, str)):
+        return ['osmosis', '--read-pbf', 'file='+str(osmpbf_clip_from),
             '--bounding-polygon', 'file='+str(shape), '--write-pbf',
-            'file='+str(path_clip)]
+            'file='+str(osmpbf_output)]
     if isinstance(shape[0], (float, int)):
-        return['osmosis', '--read-pbf', 'file='+str(path_parentfile),
+        return['osmosis', '--read-pbf', 'file='+str(osmpbf_clip_from),
             '--bounding-box', f'top={shape[3]}', f'left={shape[0]}',
             f'bottom={shape[1]}', f'right={shape[2]}',
-            '--write-pbf', 'file='+str(path_clip)]
-    if isinstance(shape[0], str):
-        return ['osmosis', '--read-pbf', 'file='+str(path_parentfile),
-            '--bounding-polygon', 'file='+shape, '--write-pbf',
-            'file='+str(path_clip)]
+            '--write-pbf', 'file='+str(osmpbf_output)]
 
     raise ValueError('''shape does not have the correct format.
                         Only bounding boxes or filepaths to .poly
@@ -182,7 +186,7 @@ def _osmosis_clip(shape, osmpbf_clip_from, osmpbf_output,
     osmpbf_clip_from: str or pathlib.Path
         file path to planet.osm.pbf or other osm.pbf file to clip
     osmpbf_output : str or pathlib.Path
-        osm.pbffile name include path under which extract will be stored
+        file path (incl. name & ending) under which extract will be stored
     overwrite : bool
         default is False. Whether to overwrite files if they already exist.
 
@@ -226,7 +230,7 @@ def clip_from_bbox(bbox, osmpbf_clip_from, osmpbf_output,
     osmpbf_clip_from: str or pathlib.Path
         file path to planet.osm.pbf or other osm.pbf file to clip
     osmpbf_output : str or pathlib.Path
-        osm.pbffile name include path under which extract will be stored
+        file path (incl. name & ending) under which extract will be stored
     overwrite : bool
         default is False. Whether to overwrite files if they already exist.
     kernel : str
@@ -239,11 +243,14 @@ def clip_from_bbox(bbox, osmpbf_clip_from, osmpbf_output,
     Installation instructions (windows, linux, apple) - see
     https://wiki.openstreetmap.org/wiki/Osmosis/Installation
     """
+    # TODO: allow for osmpbf_output to be only file name & save in default DIR
+    # TODO: avoid returning None
     if kernel == 'osmosis':
         _osmosis_clip(bbox, osmpbf_clip_from, osmpbf_output, overwrite)
+        return None
     elif kernel == 'osmconvert':
         raise NotImplementedError()
-    raise ValueError(f"Kernel {kernel} is not valid. Abort.")
+    raise ValueError(f"Kernel '{kernel}' is not valid. Abort.")
 
 
 def clip_from_poly(poly_file, osmpbf_output, osmpbf_clip_from, 
@@ -275,20 +282,24 @@ def clip_from_poly(poly_file, osmpbf_output, osmpbf_clip_from,
     Installation instructions (windows, linux, macos) - see
     https://wiki.openstreetmap.org/wiki/Osmosis/Installation
     """
+    # TODO: avoid returning None
+    # TODO: allow for osmpbf_output to be only file name & save in default DIR
     if kernel == 'osmosis':
         _osmosis_clip(poly_file, osmpbf_clip_from, osmpbf_output, overwrite)
+        return None
     elif kernel == 'osmconvert':
         raise NotImplementedError()
-    raise ValueError(f"Kernel {kernel} is not valid. Abort.")
+    raise ValueError(f"Kernel '{kernel}' is not valid. Abort.")
 
 
 def clip_from_shapes(shape_list, osmpbf_output, osmpbf_clip_from,
-                     poly_file=None, overwrite=False, kernel='osmosis'):
+                     overwrite=False, kernel='osmosis'):
     """
     get OSM raw data from a custom shape defined by a list of polygons
     which is extracted from the entire OSM planet file.
     The list of shapes first needs to be converted to a .poly file and then
-    passed back to the function (under the hood).
+    passed back to the function (under the hood, a temporary file is created
+    and deleted upon completion again).
 
     Parameters
     ----------
@@ -296,8 +307,7 @@ def clip_from_shapes(shape_list, osmpbf_output, osmpbf_clip_from,
         list of (Multi-)Polygon(s) that define the shape which should be cut,
         as e.g. obtained
     osmpbf_output : str
-        file name under which the clipped data will be stored.
-        The save path is OSM_DATA_DIR (can be changed in .config.py)
+        Full file path under which the clipped data will be stored.
     osmpbf_clip_from : str or pathlib.Path
         file path (including filename) to the *.osm.pbf file to clip from.
      poly_file : str, optional
@@ -319,17 +329,21 @@ def clip_from_shapes(shape_list, osmpbf_output, osmpbf_clip_from,
     """
 
     shape_list = _simplify_shapelist(shape_list)
-    if poly_file is None:
-        existing_files = sorted(POLY_DIR.glob('shapes_poly_*.poly'))
-        n = 0
-        if len(existing_files)>0:
-            n = existing_files[-1].with_suffix('').name.split("_")[-1]
-        poly_file = 'shapes_poly_' + str(int(n) + 1)
-    poly_file = POLY_DIR / poly_file
-
+        
+    poly_file = POLY_DIR / 'temp_shp.poly'
+    
     _shapely2poly(shape_list, poly_file)
     if kernel == 'osmosis':
         _osmosis_clip(poly_file, osmpbf_clip_from, osmpbf_output, overwrite)
+        poly_file.unlink()
+        # TODO: avoid returning None
+        # TODO: allow for osmpbf_output to be only file name & save in default DIR
+        return None
     elif kernel == 'osmconvert':
+        poly_file.unlink()
         raise NotImplementedError()
-    raise ValueError(f"Kernel {kernel} is not valid. Abort.")
+    poly_file.unlink()
+    
+    raise ValueError(f"Kernel '{kernel}' is not valid. Abort.")
+
+    
