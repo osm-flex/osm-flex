@@ -188,7 +188,8 @@ def _osmosis_clip(shape, osmpbf_clip_from, osmpbf_output,
     None or subprocess
     """
     osmpbf_clip_from = Path(osmpbf_clip_from)
-    osmpbf_clip_from = osmpbf_clip_from.with_suffix('.osm.pbf') if not osmpbf_clip_from.suffix
+    if not osmpbf_clip_from.suffix:
+        osmpbf_clip_from = osmpbf_clip_from.with_suffix('.osm.pbf') 
     if not osmpbf_clip_from.is_file():
         raise ValueError(f"OSM file {osmpbf_clip_from} to clip from not found.")
 
@@ -242,7 +243,7 @@ def clip_from_bbox(bbox, osmpbf_clip_from, osmpbf_output,
     raise ValueError(f"Kernel {kernel} is not valid. Abort.")
 
 
-def clip_from_poly(poly_file, osmpbf_clip_from, osmpbf_output,
+def clip_from_poly(poly_file, osmpbf_output, osmpbf_clip_from, 
                    overwrite=False, kernel='osmosis'):
     """
     get OSM raw data from a custom shape defined in .poly file which is clipped
@@ -252,7 +253,7 @@ def clip_from_poly(poly_file, osmpbf_clip_from, osmpbf_output,
     ----------
     poly_file : str
         file path to a .poly file
-    filename : str or pathlib.Path
+    osmpbf_output : str or pathlib.Path
         file path (incl. name & ending) under which extract will be stored
     clip_from_file : str or pathlib.Path
         file path to planet-latest.osm.pbf. Will download & store it as
@@ -294,7 +295,7 @@ def clip_from_shapes(shape_list, osmpbf_output, osmpbf_clip_from,
     osmpbf_output : str
         file name under which the clipped data will be stored.
         The save path is OSM_DATA_DIR (can be changed in .config.py)
-    smpbf_clip_from : str or pathlib.Path
+    osmpbf_clip_from : str or pathlib.Path
         file path (including filename) to the *.osm.pbf file to clip from.
      poly_file : str, optional
         file name for the intermediary .poly created from the shapes.
@@ -317,7 +318,9 @@ def clip_from_shapes(shape_list, osmpbf_output, osmpbf_clip_from,
     shape_list = _simplify_shapelist(shape_list)
     if poly_file is None:
         existing_files = sorted(POLY_DIR.glob('shapes_poly_*.poly'))
-        n = existing_files[-1].with_suffix('').name.split("_")[-1]
+        n = 0
+        if len(existing_files)>0:
+            n = existing_files[-1].with_suffix('').name.split("_")[-1]
         poly_file = 'shapes_poly_' + str(int(n) + 1)
     poly_file = POLY_DIR / poly_file
 
