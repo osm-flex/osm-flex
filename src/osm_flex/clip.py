@@ -6,11 +6,10 @@ clipping functions
 
 import logging
 import numpy as np
-from pathlib import Path
+import pathlib
 import shapely
 import subprocess
 from cartopy.io import shapereader
-from .config import POLY_DIR
 
 from osm_flex.config import POLY_DIR, OSM_DATA_DIR
 LOGGER = logging.getLogger(__name__)
@@ -112,7 +111,7 @@ def _shapely2poly(geom_list, filename):
     creating them), see
     https://wiki.openstreetmap.org/wiki/Osmosis/Polygon_Filter_File_Format
     """
-    filename = Path(filename).with_suffix('.poly')
+    filename = pathlib.Path(filename).with_suffix('.poly')
     if filename.exists():
         raise ValueError(f'File {filename} already exists, aborting.')
 
@@ -146,7 +145,11 @@ def _shapely2poly(geom_list, filename):
 
 # TODO: clipping functions included only for osmosis. add osmconvert analogs.
 def _build_osmosis_cmd(shape, path_parentfile, path_clip):
-
+    
+    if isinstance(shape, pathlib.PosixPath):
+        return ['osmosis', '--read-pbf', 'file='+str(path_parentfile),
+            '--bounding-polygon', 'file='+str(shape), '--write-pbf',
+            'file='+str(path_clip)]
     if isinstance(shape[0], (float, int)):
         return['osmosis', '--read-pbf', 'file='+str(path_parentfile),
             '--bounding-box', f'top={shape[3]}', f'left={shape[0]}',
@@ -187,14 +190,14 @@ def _osmosis_clip(shape, osmpbf_clip_from, osmpbf_output,
     -------
     None or subprocess
     """
-    osmpbf_clip_from = Path(osmpbf_clip_from)
+    osmpbf_clip_from = pathlib.Path(osmpbf_clip_from)
     if not osmpbf_clip_from.suffix:
         osmpbf_clip_from = osmpbf_clip_from.with_suffix('.osm.pbf')
     if not osmpbf_clip_from.is_file():
         raise ValueError(f"OSM file {osmpbf_clip_from} to clip from not found.")
 
-    if ((not Path(osmpbf_output).is_file()) or
-        (Path(osmpbf_output).is_file() and overwrite)):
+    if ((not pathlib.Path(osmpbf_output).is_file()) or
+        (pathlib.Path(osmpbf_output).is_file() and overwrite)):
 
         LOGGER.info("""File doesn`t yet exist or overwriting old one.
                     Assembling osmosis command.""")
