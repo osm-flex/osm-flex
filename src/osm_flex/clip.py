@@ -189,7 +189,7 @@ def _osmosis_clip(shape, osmpbf_clip_from, osmpbf_output,
     """
     osmpbf_clip_from = Path(osmpbf_clip_from)
     if not osmpbf_clip_from.suffix:
-        osmpbf_clip_from = osmpbf_clip_from.with_suffix('.osm.pbf') 
+        osmpbf_clip_from = osmpbf_clip_from.with_suffix('.osm.pbf')
     if not osmpbf_clip_from.is_file():
         raise ValueError(f"OSM file {osmpbf_clip_from} to clip from not found.")
 
