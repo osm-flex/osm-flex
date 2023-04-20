@@ -147,8 +147,7 @@ def retrieve_cis(self, ci_type):
     CIs. Modify if desired.
     """
     # features consisting in points and multipolygon results:
-    if ci_type in ['healthcare','education','primary_education', 'food',
-                   'buildings', 'power_components']:
+    if ci_type in ['healthcare','education','food', 'buildings']:
         gdf = self.retrieve('points', DICT_CIS_OSM[ci_type]['osm_keys'],
                              DICT_CIS_OSM[ci_type]['osm_query'])
         gdf = gdf.append(
@@ -162,7 +161,7 @@ def retrieve_cis(self, ci_type):
 
     # features consisting in points, multipolygons and lines:
     elif ci_type in ['gas','oil','telecom','water','wastewater','power',
-                     'rail']:
+                     'rail','road', 'main_road']:
         gdf = self.retrieve('points', DICT_CIS_OSM[ci_type]['osm_keys'],
                              DICT_CIS_OSM[ci_type]['osm_query'])
         gdf = gdf.append(
@@ -171,9 +170,6 @@ def retrieve_cis(self, ci_type):
         gdf = gdf.append(
             self.retrieve('lines', DICT_CIS_OSM[ci_type]['osm_keys'],
                              DICT_CIS_OSM[ci_type]['osm_query']))
-    elif ci_type in ['road', 'main_road']:
-        gdf = self.retrieve('lines', DICT_CIS_OSM[ci_type]['osm_keys'],
-                             DICT_CIS_OSM[ci_type]['osm_query'])
     else:
         LOGGER.warning('feature not in DICT_CIS_OSM. Returning empty gdf')
         gdf = gpd.GeoDataFrame()

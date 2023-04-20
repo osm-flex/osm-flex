@@ -263,24 +263,15 @@ DICT_CIS_OSM =  {
                              building='kindergarten' or 
                              amenity='kindergarten' or
                              building='college' or amenity='college' or
-                             building='childcare' or amenity='childcare' or
-                             education='school' or education='kindergarten' or
-                             amenity='university' or building='university'
-                             """},
-        'primary_education' : {
-            'osm_keys' : ['amenity','building','education','name'],
-            'osm_query' : """building='school' or amenity='school' or
-                             education='school' or amenity='college' or 
-                             building='college'
-                             """},
-                             
+                             building='university' or amenity='university' or
+                             building='college' or amenity='college' or
+                             building='childcare' or amenity='childcare'"""},
         'healthcare' : {
             'osm_keys' : ['amenity','building','healthcare','name'],
             'osm_query' : """amenity='hospital' or healthcare='hospital' or
                              building='hospital' or building='clinic' or
                              amenity='clinic' or healthcare='clinic' or 
-                             amenity='doctors' or healthcare='doctors' or 
-                             amenity='health_post'
+                             amenity='doctors' or healthcare='doctors'
                              """},
         'water' : {
             'osm_keys' : ['man_made','pump','pipeline','emergency','name'],
@@ -352,14 +343,6 @@ DICT_CIS_OSM =  {
                                power='pole' or power='portal' or 
                                power='tower' or power='terminal' or 
                                power='switch' or power='catenary_mast' or
-                               utility='power'"""},
-        'power_components' : {
-              'osm_keys' : ['power','voltage','utility','name'],
-              'osm_query' : """power='plant' or
-                               power='generator' or power='substation' or
-                               power='transformer' or
-                               power='terminal' or 
-                               power='switch' or
                                utility='power'"""},
         'wastewater' : {
               'osm_keys' : ['reservoir_type','man_made','utility','natural',
