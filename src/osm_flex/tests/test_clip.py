@@ -46,6 +46,11 @@ class TestClip(unittest.TestCase):
         result = _simplify_shapelist(geom_list)
         self.assertEqual(result[0].wkt, 'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))')
 
+        # Test too small valid input
+        geom_list = [shapely.geometry.Polygon([(0, 0), (0.01, 0), (0.01, 0.01), (0, 0.01)])]
+        result = _simplify_shapelist(geom_list)
+        self.assertFlase(result) #check if result is empty list
+
         # Test for invalid input type
         with self.assertRaises(TypeError):
             _simplify_shapelist("invalid_input")
@@ -88,7 +93,7 @@ class TestClip(unittest.TestCase):
              '--write-pbf',
              'file=/path/to/extract.osm.pbf']
         self.assertEqual(result, expected_result)
-        
+
 
 if __name__ == "__main__":
     TESTS = unittest.TestLoader().loadTestsFromTestCase(TestClip)
