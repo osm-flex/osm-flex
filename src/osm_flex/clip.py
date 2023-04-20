@@ -143,7 +143,7 @@ def _shapely2poly(geom_list, filename):
 def _build_osmosis_cmd(shape, osmpbf_clip_from, osmpbf_output):
     """
     builds osmosis command for clipping
-    
+
     Parameters
     -----------
     shape : list or str or pathlib.Path
@@ -253,7 +253,7 @@ def clip_from_bbox(bbox, osmpbf_clip_from, osmpbf_output,
     raise ValueError(f"Kernel '{kernel}' is not valid. Abort.")
 
 
-def clip_from_poly(poly_file, osmpbf_output, osmpbf_clip_from, 
+def clip_from_poly(poly_file, osmpbf_output, osmpbf_clip_from,
                    overwrite=False, kernel='osmosis'):
     """
     get OSM raw data from a custom shape defined in .poly file which is clipped
@@ -310,10 +310,6 @@ def clip_from_shapes(shape_list, osmpbf_output, osmpbf_clip_from,
         Full file path under which the clipped data will be stored.
     osmpbf_clip_from : str or pathlib.Path
         file path (including filename) to the *.osm.pbf file to clip from.
-     poly_file : str, optional
-        file name for the intermediary .poly created from the shapes.
-        File is saved in directory POLY_DIR (can be change in .config.py)
-        Default is shapes_poly_#.poly.
     overwrite : bool
         default is False. Whether to overwrite files if they already exist.
     kernel : str
@@ -329,9 +325,9 @@ def clip_from_shapes(shape_list, osmpbf_output, osmpbf_clip_from,
     """
 
     shape_list = _simplify_shapelist(shape_list)
-        
+
     poly_file = POLY_DIR / 'temp_shp.poly'
-    
+
     _shapely2poly(shape_list, poly_file)
     if kernel == 'osmosis':
         _osmosis_clip(poly_file, osmpbf_clip_from, osmpbf_output, overwrite)
@@ -343,7 +339,5 @@ def clip_from_shapes(shape_list, osmpbf_output, osmpbf_clip_from,
         poly_file.unlink()
         raise NotImplementedError()
     poly_file.unlink()
-    
-    raise ValueError(f"Kernel '{kernel}' is not valid. Abort.")
 
-    
+    raise ValueError(f"Kernel '{kernel}' is not valid. Abort.")
