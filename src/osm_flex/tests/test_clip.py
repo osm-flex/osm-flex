@@ -11,7 +11,7 @@ import shapely
 from osm_flex.clip import get_admin1_shapes, get_country_shape, _simplify_shapelist, _shapely2poly, _build_osmosis_cmd
 
 
-class TestClipping(unittest.TestCase):
+class TestClip(unittest.TestCase):
     def test_get_admin1_shapes(self):
         # Test for valid country code
         result = get_admin1_shapes("CAN")
@@ -91,5 +91,5 @@ class TestClipping(unittest.TestCase):
         
 
 if __name__ == "__main__":
-    TESTS = unittest.TestLoader().loadTestsFromTestCase(TestClipping)
+    TESTS = unittest.TestLoader().loadTestsFromTestCase(TestClip)
     unittest.TextTestRunner(verbosity=2).run(TESTS)

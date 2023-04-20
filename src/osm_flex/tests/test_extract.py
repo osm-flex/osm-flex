@@ -1,43 +1,25 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-test extract functions
-"""
-
 import unittest
-import shutil
-from pathlib import Path
 import geopandas as gpd
-from osm_flex import extract
+from osm_flex.extract import retrieve, retrieve_cis, _query_builder
+from pathlib import Path
 
-# TODO: how to test extraction? put a small osm-pbf file into a test/data folder?
+class TestExtractionFunctions(unittest.TestCase):
 
-class Testextract(unittest.TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.osm_file = 'test.osm.pbf'
-        cls.geojson_file = 'test.geojson'
-        cls.osm_path = Path(__file__).parent / 'data' / cls.osm_file
-        cls.geojson_path = Path(__file__).parent / 'data' / cls.geojson_file
-        # create a test output directory
-        cls.test_output_dir = Path(__file__).parent / 'output'
-        cls.test_output_dir.mkdir(exist_ok=True)
-
-    @classmethod
-    def tearDownClass(cls):
-        # remove the test output directory
-        shutil.rmtree(cls.test_output_dir)
+    def __init__(self):
+        self.test_data_path = Path(__file__).parent / 'data' 
+        self.osm_file = self.test_data_path / 'test.osm.pbf'
 
     def test_retrieve(self):
-        pass
+        gdf = retrieve(self.osm_file, 'multipolygons', ['name', 'building'], ["building='yes'"])
+        self.assertIsInstance(gdf, gpd.GeoDataFrame)
+        self.assertEqual(set(gdf.columns), set(['osm_id', 'building', 'name', 'geometry']))
 
     def test_retrieve_cis(self):
         pass
-
-    def test__query_builder(self):
+    
+    def test__queery_builder(self):
         pass
 
 if __name__ == "__main__":
-    TESTS = unittest.TestLoader().loadTestsFromTestCase(Testextract)
-    unittest.TextTestRunner(verbosity=2).run(TESTS)                              
+    TESTS = unittest.TestLoader().loadTestsFromTestCase(TestExtractionFunctions)
+    unittest.TextTestRunner(verbosity=2).run(TESTS)
