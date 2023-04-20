@@ -80,7 +80,7 @@ def _simplify_shapelist(geom_list, thres=None):
     .poly files
     """
     if thres is None:
-        thresh = 0.1 if shapely.ops.unary_union(geom_list).area > 1 else 0.01
+        thresh = 0.1 if shapely.unary_union(geom_list).area > 1 else 0.01
     geom_list = [geom for geom in geom_list if geom.area>thresh]
     return [geom.simplify(tolerance=0.01, preserve_topology=True) for
             geom in geom_list]
@@ -143,7 +143,7 @@ def _shapely2poly(geom_list, filename):
 def _build_osmosis_cmd(shape, osmpbf_clip_from, osmpbf_output):
     """
     builds osmosis command for clipping
-    
+
     Parameters
     -----------
     shape : list or str or pathlib.Path
@@ -248,12 +248,12 @@ def clip_from_bbox(bbox, osmpbf_clip_from, osmpbf_output,
     if kernel == 'osmosis':
         _osmosis_clip(bbox, osmpbf_clip_from, osmpbf_output, overwrite)
         return None
-    elif kernel == 'osmconvert':
+    if kernel == 'osmconvert':
         raise NotImplementedError()
     raise ValueError(f"Kernel '{kernel}' is not valid. Abort.")
 
 
-def clip_from_poly(poly_file, osmpbf_output, osmpbf_clip_from, 
+def clip_from_poly(poly_file, osmpbf_output, osmpbf_clip_from,
                    overwrite=False, kernel='osmosis'):
     """
     get OSM raw data from a custom shape defined in .poly file which is clipped
@@ -287,7 +287,7 @@ def clip_from_poly(poly_file, osmpbf_output, osmpbf_clip_from,
     if kernel == 'osmosis':
         _osmosis_clip(poly_file, osmpbf_clip_from, osmpbf_output, overwrite)
         return None
-    elif kernel == 'osmconvert':
+    if kernel == 'osmconvert':
         raise NotImplementedError()
     raise ValueError(f"Kernel '{kernel}' is not valid. Abort.")
 
@@ -329,21 +329,19 @@ def clip_from_shapes(shape_list, osmpbf_output, osmpbf_clip_from,
     """
 
     shape_list = _simplify_shapelist(shape_list)
-        
+
     poly_file = POLY_DIR / 'temp_shp.poly'
-    
+
     _shapely2poly(shape_list, poly_file)
     if kernel == 'osmosis':
-        _osmosis_clip(poly_file, osmpbf_clip_from, osmpbf_output, overwrite)
-        poly_file.unlink()
         # TODO: avoid returning None
         # TODO: allow for osmpbf_output to be only file name & save in default DIR
+        _osmosis_clip(poly_file, osmpbf_clip_from, osmpbf_output, overwrite)
+        poly_file.unlink()
         return None
-    elif kernel == 'osmconvert':
+    if kernel == 'osmconvert':
         poly_file.unlink()
         raise NotImplementedError()
     poly_file.unlink()
-    
-    raise ValueError(f"Kernel '{kernel}' is not valid. Abort.")
 
-    
+    raise ValueError(f"Kernel '{kernel}' is not valid. Abort.")

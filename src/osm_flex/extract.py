@@ -21,9 +21,8 @@ gdal.SetConfigOption("OSM_CONFIG_FILE", str(OSM_CONFIG_FILE))
 
 def _query_builder( geo_type, constraint_dict):
     """
-    from https://github.com/ElcoK/trails, see extract.py)
     This function builds an SQL query from the values passed to the retrieve()
-    function.s
+    function.
 
     Parameters
     ---------
