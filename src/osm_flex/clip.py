@@ -310,10 +310,6 @@ def clip_from_shapes(shape_list, osmpbf_output, osmpbf_clip_from,
         Full file path under which the clipped data will be stored.
     osmpbf_clip_from : str or pathlib.Path
         file path (including filename) to the *.osm.pbf file to clip from.
-     poly_file : str, optional
-        file name for the intermediary .poly created from the shapes.
-        File is saved in directory POLY_DIR (can be change in .config.py)
-        Default is shapes_poly_#.poly.
     overwrite : bool
         default is False. Whether to overwrite files if they already exist.
     kernel : str
