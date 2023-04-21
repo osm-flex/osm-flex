@@ -299,12 +299,11 @@ def clip_from_bbox(bbox, osmpbf_clip_from, osmpbf_output,
         return
     if kernel == 'osmconvert':
         _osmconvert_clip(bbox, osmpbf_clip_from, osmpbf_output, overwrite)
-        #raise NotImplementedError()
         return
     raise ValueError(f"Kernel '{kernel}' is not valid. Abort.")
 
 
-def clip_from_poly(poly_file, osmpbf_output, osmpbf_clip_from,
+def clip_from_poly(poly_file, osmpbf_clip_from, osmpbf_output,
                    overwrite=False, kernel='osmosis'):
     """
     get OSM raw data from a custom shape defined in .poly file which is clipped
@@ -333,17 +332,16 @@ def clip_from_poly(poly_file, osmpbf_output, osmpbf_clip_from,
     Installation instructions (windows, linux, macos) - see
     https://wiki.openstreetmap.org/wiki/Osmosis/Installation
     """
-    # TODO: avoid returning None
-    # TODO: allow for osmpbf_output to be only file name & save in default DIR
     if kernel == 'osmosis':
         _osmosis_clip(poly_file, osmpbf_clip_from, osmpbf_output, overwrite)
-        return None
+        return
     if kernel == 'osmconvert':
-        raise NotImplementedError()
+        _osmconvert_clip(poly_file, osmpbf_clip_from, osmpbf_output, overwrite)
+        return
     raise ValueError(f"Kernel '{kernel}' is not valid. Abort.")
 
 
-def clip_from_shapes(shape_list, osmpbf_output, osmpbf_clip_from,
+def clip_from_shapes(shape_list, osmpbf_clip_from, osmpbf_output,
                      overwrite=False, kernel='osmosis'):
     """
     get OSM raw data from a custom shape defined by a list of polygons
@@ -381,14 +379,12 @@ def clip_from_shapes(shape_list, osmpbf_output, osmpbf_clip_from,
 
     _shapely2poly(shape_list, poly_file)
     if kernel == 'osmosis':
-        # TODO: avoid returning None
-        # TODO: allow for osmpbf_output to be only file name & save in default DIR
         _osmosis_clip(poly_file, osmpbf_clip_from, osmpbf_output, overwrite)
         poly_file.unlink()
-        return None
+        return
     if kernel == 'osmconvert':
+        _osmconvert_clip(poly_file, osmpbf_clip_from, osmpbf_output, overwrite)
         poly_file.unlink()
-        raise NotImplementedError()
-    poly_file.unlink()
+        return
 
     raise ValueError(f"Kernel '{kernel}' is not valid. Abort.")

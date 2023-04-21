@@ -8,7 +8,11 @@ import unittest
 import tempfile
 import os
 import shapely
-from osm_flex.clip import get_admin1_shapes, get_country_shape, _simplify_shapelist, _shapely2poly, _build_osmosis_cmd
+from pathlib import Path
+from osm_flex.clip import (get_admin1_shapes, get_country_shape, 
+                           _simplify_shapelist, _shapely2poly, _build_osmosis_cmd,
+                           _build_osmconvert_cmd)
+from osm_flex.config import OSMCONVERT_PATH
 
 
 class TestClip(unittest.TestCase):
@@ -76,7 +80,7 @@ class TestClip(unittest.TestCase):
             _shapely2poly("invalid_input", "test.poly")
 
     def test__build_osmosis_cmd(self):
-        # Test for valid input
+        # Test for bbox input
         shape = [0, 0, 1, 1]
         osmpbf_clip_from = "/path/to/planet.osm.pbf"
         osmpbf_output = "/path/to/extract.osm.pbf"
@@ -93,6 +97,48 @@ class TestClip(unittest.TestCase):
              '--write-pbf',
              'file=/path/to/extract.osm.pbf']
         self.assertEqual(result, expected_result)
+        
+        # Test for .poly file input
+        shape = "/path/to/shape.poly"
+        osmpbf_clip_from = "/path/to/planet.osm.pbf"
+        osmpbf_output = "/path/to/extract.osm.pbf"
+        result = _build_osmosis_cmd(shape, osmpbf_clip_from, osmpbf_output)
+        expected_result = ['osmosis',
+         '--read-pbf',
+         'file=/path/to/planet.osm.pbf',
+         '--bounding-polygon',
+         'file=/path/to/shape.poly',
+         '--write-pbf',
+         'file=/path/to/extract.osm.pbf']
+        self.assertEqual(result, expected_result)
+        
+    def test__build_osmconvert_cmd(self):
+        # Test for valid input
+        shape = [0, 0, 1, 1]
+        osmpbf_clip_from = "/path/to/planet.osm.pbf"
+        osmpbf_output = "/path/to/extract.osm.pbf"
+        result = _build_osmconvert_cmd(shape, osmpbf_clip_from, osmpbf_output)
+        expected_result = [str(OSMCONVERT_PATH),
+         '/path/to/planet.osm.pbf',
+         '-b=0,0,1,1',
+         '--complete-ways',
+         '--complete-multipolygons',
+         '-o=/path/to/extract.osm.pbf']
+        self.assertEqual(result, expected_result)
+        
+        # Test for .poly file input
+        shape = Path("/path/to/shape.poly")
+        osmpbf_clip_from = "/path/to/planet.osm.pbf"
+        osmpbf_output = "/path/to/extract.osm.pbf"
+        result = _build_osmconvert_cmd(shape, osmpbf_clip_from, osmpbf_output)
+        expected_result = [str(OSMCONVERT_PATH),
+         '/path/to/planet.osm.pbf',
+         '-B=/path/to/shape.poly',
+         '--complete-ways',
+         '--complete-multipolygons',
+         '-o=/path/to/extract.osm.pbf']
+        self.assertEqual(result, expected_result)
+        
 
 
 if __name__ == "__main__":
