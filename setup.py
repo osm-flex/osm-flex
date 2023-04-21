@@ -1,4 +1,5 @@
-"""A setuptools based setup module.
+"""
+A setuptools based setup module.
 """
 
 from setuptools import setup, find_packages
@@ -9,10 +10,11 @@ setup(
     description='Python package for flexible data extraction from OpenStreetMap',
     url='https://github.com/ElcoK/osm-flex',
     license='GPL-3.0',
-    packages= find_packages()+['data'],
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
     install_requires=['geopandas',
                       'numpy', 
-                      'shapely',
+                      'shapely>=2.0.1',
                       'tqdm'
                       ],
     keywords='OpenStreetMap',

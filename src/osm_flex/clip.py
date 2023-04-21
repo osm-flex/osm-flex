@@ -11,7 +11,7 @@ import shapely
 import subprocess
 from cartopy.io import shapereader
 
-from osm_flex.config import POLY_DIR
+from osm_flex.config import POLY_DIR, OSMCONVERT_PATH
 LOGGER = logging.getLogger(__name__)
 
 
@@ -140,6 +140,56 @@ def _shapely2poly(geom_list, filename):
     file.write("END" +"\n")
     file.close()
 
+def _build_osmconvert_cmd(shape, osmpbf_clip_from, osmpbf_output):
+    """
+    builds osmconvert command for clipping
+
+    Parameters
+    -----------
+    shape : list or str or pathlib.Path
+        list containing [xmin, ymin, xmax, ymax] for a bounding box or
+        a string/Path to the .poly file path delimiting the bounds.
+    osmpbf_clip_from: str or pathlib.Path
+        file path to planet.osm.pbf or other osm.pbf file to clip
+    osmpbf_output : str or pathlib.Path
+        file path (incl. name & ending) under which extract will be stored
+    """
+
+    if isinstance(shape, (pathlib.PosixPath, str)):
+        return [str(OSMCONVERT_PATH), str(osmpbf_clip_from), f'-B={str(shape)}',
+                '--complete-ways', '--complete-multipolygons', 
+                f'-o={osmpbf_output}'
+                ]
+    if isinstance(shape[0], (float, int)):
+        return [str(OSMCONVERT_PATH), str(osmpbf_clip_from), 
+                '-b='+str(shape[0])+','+str(shape[1])+','+str(shape[2])+','+str(shape[3]),
+                '--complete-ways', '--complete-multipolygons',
+                f'-o={osmpbf_output}'
+                ]
+    
+def _osmconvert_clip(shape, osmpbf_clip_from, osmpbf_output,
+                     overwrite=False):
+        
+    osmpbf_clip_from = pathlib.Path(osmpbf_clip_from)
+    if not osmpbf_clip_from.suffix:
+        osmpbf_clip_from = osmpbf_clip_from.with_suffix('.osm.pbf')
+    if not osmpbf_clip_from.is_file():
+        raise ValueError(f"OSM file {osmpbf_clip_from} to clip from not found.")
+
+    if ((not pathlib.Path(osmpbf_output).is_file()) or
+        (pathlib.Path(osmpbf_output).is_file() and overwrite)):
+
+        LOGGER.info("""File doesn`t yet exist or overwriting old one.
+                    Assembling osmosis command.""")
+        cmd = _build_osmconvert_cmd(shape, osmpbf_clip_from, osmpbf_output)
+
+    LOGGER.info('''Extracting from larger file...
+                This will take a while''')
+
+    return subprocess.run(cmd, stdout=subprocess.PIPE,
+                          universal_newlines=True)
+
+
 def _build_osmosis_cmd(shape, osmpbf_clip_from, osmpbf_output):
     """
     builds osmosis command for clipping
@@ -165,15 +215,15 @@ def _build_osmosis_cmd(shape, osmpbf_clip_from, osmpbf_output):
             '--write-pbf', 'file='+str(osmpbf_output)]
 
     raise ValueError('''shape does not have the correct format.
-                        Only bounding boxes or filepaths to .poly
-                        files are allowed''')
+                        Only bounding boxes, shapely (multi-)polygons or 
+                        filepaths to .poly files are allowed''')
 
+    
 def _osmosis_clip(shape, osmpbf_clip_from, osmpbf_output,
                   overwrite=False):
     """
     Runs the command line tool osmosis to cut out all map info within
-    shape (bounding box or poygon(s)), from a bigger parent file, unless
-    file already exists.
+    shape (bounding box or poygon(s)), from a bigger parent file.
 
     If your device doesn't have osmosis yet, see installation instructions:
     https://wiki.openstreetmap.org/wiki/Osmosis/Installation
@@ -244,12 +294,13 @@ def clip_from_bbox(bbox, osmpbf_clip_from, osmpbf_output,
     https://wiki.openstreetmap.org/wiki/Osmosis/Installation
     """
     # TODO: allow for osmpbf_output to be only file name & save in default DIR
-    # TODO: avoid returning None
     if kernel == 'osmosis':
         _osmosis_clip(bbox, osmpbf_clip_from, osmpbf_output, overwrite)
-        return None
+        return
     if kernel == 'osmconvert':
-        raise NotImplementedError()
+        _osmconvert_clip(bbox, osmpbf_clip_from, osmpbf_output, overwrite)
+        #raise NotImplementedError()
+        return
     raise ValueError(f"Kernel '{kernel}' is not valid. Abort.")
 
 

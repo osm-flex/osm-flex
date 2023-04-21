@@ -11,6 +11,7 @@ from pathlib import Path
 # =============================================================================
 OSM_CONFIG_FILE = Path(__file__).parent.joinpath('osmconf.ini')
 OSM_DIR = Path(Path.home(), 'osm')
+OSMCONVERT_PATH = OSM_DIR / 'osmconvert'
 OSM_DATA_DIR = OSM_DIR.joinpath("osm_bpf")
 POLY_DIR = OSM_DIR.joinpath("poly")
 EXTRACT_DIR = OSM_DIR.joinpath("extracts")
