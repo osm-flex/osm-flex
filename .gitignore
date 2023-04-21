@@ -1,0 +1,7 @@
+
+src/osm_flex/__pycache__/
+doc/.ipynb_checkpoints
+.DS_Store
+src/.DS_Store
+src/osm_flex/.DS_Store
+src/osm_flex/tests/.DS_Store
