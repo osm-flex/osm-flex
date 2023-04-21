@@ -7,6 +7,7 @@ extraction functions
 import logging
 import geopandas as gpd
 from osgeo import ogr, gdal
+import pandas as pd
 from pathlib import Path
 import shapely
 from tqdm import tqdm
@@ -21,13 +22,13 @@ gdal.SetConfigOption("OSM_CONFIG_FILE", str(OSM_CONFIG_FILE))
 
 def _query_builder( geo_type, constraint_dict):
     """
-    This function builds an SQL query from the values passed to the retrieve()
+    This function builds an SQL query from the values passed to the extract()
     function.
 
     Parameters
     ---------
     geo_type : str
-        Type of geometry to retrieve. One of [points, lines, multipolygons]
+        Type of geometry to extract. One of [points, lines, multipolygons]
     constraint_dict :  dict
 
     Returns
@@ -44,7 +45,7 @@ def _query_builder( geo_type, constraint_dict):
 
     return query
 
-def retrieve(osm_path, geo_type, osm_keys, osm_query):
+def extract(osm_path, geo_type, osm_keys, osm_query):
     """
     Function to extract geometries and tag info for entires in the OSM file
     matching certain OSM key-value constraints.
@@ -55,7 +56,7 @@ def retrieve(osm_path, geo_type, osm_keys, osm_query):
     osm_path : str or Path
         location of osm.pbf file from which to parse
     geo_type : str
-        Type of geometry to retrieve. One of [points, lines, multipolygons]
+        Type of geometry to extract. One of [points, lines, multipolygons]
     osm_keys : list
         a list with all the osm keys that should be reported as columns in
         the output gdf.
@@ -75,7 +76,7 @@ def retrieve(osm_path, geo_type, osm_keys, osm_query):
     1) The keys that are searchable are specified in the osmconf.ini file.
     Make sure that they exist in the attributes=... paragraph under the
     respective geometry section.
-    For example, to retrieve multipolygons with building='yes',
+    For example, to extract multipolygons with building='yes',
     building must be in the attributes under
     the [multipolygons] section of the file. You can find it in the same
     folder as the osm_dataloader.py module is located.
@@ -130,9 +131,9 @@ def retrieve(osm_path, geo_type, osm_keys, osm_query):
         crs='epsg:4326')
 
 # TODO: decide on name of wrapper, which categories included & what components fall under it.
-def retrieve_cis(self, ci_type):
+def extract_cis(osm_path, ci_type):
     """
-    A wrapper around retrieve() to conveniently retrieve map info for a
+    A wrapper around extract() to conveniently extract map info for a
     selection of  critical infrastructure types from the given osm.pbf file.
     No need to search for osm key/value tags and relevant geometry types.
     Parameters
@@ -148,28 +149,30 @@ def retrieve_cis(self, ci_type):
     """
     # features consisting in points and multipolygon results:
     if ci_type in ['healthcare','education','food', 'buildings']:
-        gdf = self.retrieve('points', DICT_CIS_OSM[ci_type]['osm_keys'],
-                             DICT_CIS_OSM[ci_type]['osm_query'])
-        gdf = gdf.append(
-            self.retrieve('multipolygons', DICT_CIS_OSM[ci_type]['osm_keys'],
-                          DICT_CIS_OSM[ci_type]['osm_query']))
+        gdf = pd.concat([
+            extract(osm_path, 'points', DICT_CIS_OSM[ci_type]['osm_keys'],
+                    DICT_CIS_OSM[ci_type]['osm_query']),
+            extract(osm_path, 'multipolygons', DICT_CIS_OSM[ci_type]['osm_keys'],
+                    DICT_CIS_OSM[ci_type]['osm_query'])
+            ])
 
     # features consisting in multipolygon results:
     elif ci_type in ['air']:
-        gdf = self.retrieve('multipolygons', DICT_CIS_OSM[ci_type]['osm_keys'],
-                             DICT_CIS_OSM[ci_type]['osm_query'])
+        gdf = extract(osm_path, 'multipolygons', 
+                      DICT_CIS_OSM[ci_type]['osm_keys'],
+                      DICT_CIS_OSM[ci_type]['osm_query'])
 
     # features consisting in points, multipolygons and lines:
     elif ci_type in ['gas','oil','telecom','water','wastewater','power',
                      'rail','road', 'main_road']:
-        gdf = self.retrieve('points', DICT_CIS_OSM[ci_type]['osm_keys'],
+        gdf =  pd.concat([
+            extract(osm_path, 'points', DICT_CIS_OSM[ci_type]['osm_keys'],
+                    DICT_CIS_OSM[ci_type]['osm_query']),
+            extract(osm_path, 'multipolygons', DICT_CIS_OSM[ci_type]['osm_keys'],
+                             DICT_CIS_OSM[ci_type]['osm_query']),
+            extract(osm_path, 'lines', DICT_CIS_OSM[ci_type]['osm_keys'],
                              DICT_CIS_OSM[ci_type]['osm_query'])
-        gdf = gdf.append(
-            self.retrieve('multipolygons', DICT_CIS_OSM[ci_type]['osm_keys'],
-                             DICT_CIS_OSM[ci_type]['osm_query']))
-        gdf = gdf.append(
-            self.retrieve('lines', DICT_CIS_OSM[ci_type]['osm_keys'],
-                             DICT_CIS_OSM[ci_type]['osm_query']))
+            ])
     else:
         LOGGER.warning('feature not in DICT_CIS_OSM. Returning empty gdf')
         gdf = gpd.GeoDataFrame()
