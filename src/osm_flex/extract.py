@@ -96,6 +96,7 @@ def extract(osm_path, geo_type, osm_keys, osm_query):
     if not Path(osm_path).is_file():
         raise ValueError(f"the given path is not a file: {osm_path}")
     
+    osm_path = str(osm_path)
     constraint_dict = {
         'osm_keys' : osm_keys,
         'osm_query' : osm_query}
@@ -138,6 +139,8 @@ def extract_cis(osm_path, ci_type):
     No need to search for osm key/value tags and relevant geometry types.
     Parameters
     ----------
+    osm_path : str or Path
+        location of osm.pbf file from which to parse
     ci_type : str
         one of DICT_CIS_OSM.keys(), i.e. 'education', 'healthcare',
         'water', 'telecom', 'road', 'rail', 'air', 'gas', 'oil', 'power',
