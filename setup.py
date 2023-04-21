@@ -14,6 +14,7 @@ setup(
     package_dir={'': 'src'},
     install_requires=['geopandas',
                       'numpy', 
+                      'pandas',
                       'shapely>=2.0.1',
                       'tqdm'
                       ],
