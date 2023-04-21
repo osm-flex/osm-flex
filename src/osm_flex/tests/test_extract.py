@@ -1,3 +1,16 @@
+"""
+This file is part of OSM-flex.
+Copyright (C) 2023 OSM-flex contributors listed in AUTHORS.
+OSM-flex is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free
+Software Foundation, version 3.
+OSM-flex is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+-----
+test extraction functions
+"""
+
 import unittest
 import geopandas as gpd
 from osm_flex.extract import extract, extract_cis, _query_builder
