@@ -1,0 +1,6 @@
+dependencies:
+  - geopandas
+  - numpy
+  - pandas
+  - shapely>=2.0
+  - tqdm
