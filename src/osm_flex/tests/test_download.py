@@ -12,7 +12,10 @@ test download functions
 """
 
 import unittest
-from osm_flex.download import _create_gf_download_url, get_country_geofabrik, get_region_geofabrik, get_planet_file
+from osm_flex.download import (_create_gf_download_url, 
+                               get_country_geofabrik, 
+                               get_region_geofabrik, 
+                               get_planet_file)
 
 class TestDownload(unittest.TestCase):
 
