@@ -12,6 +12,10 @@ test download functions
 """
 
 import unittest
+import tempfile
+import os
+import shapely
+from pathlib import Path
 from osm_flex.download import (_create_gf_download_url, 
                                get_country_geofabrik, 
                                get_region_geofabrik, 
@@ -23,13 +27,54 @@ class TestDownload(unittest.TestCase):
         pass
 
     def test_create_gf_download_url(self):
-        pass
-
+        
+        # TODO: assert raises KeyError
+        #iso3 = 'ATG'
+        #file_format = 'pbf'
+        #_create_gf_download_url(iso3, file_format)
+        
+        # TODO: assert raises KeyError
+        #iso3 = 'DEU'
+        #file_format = 'pdf'
+        #_create_gf_download_url(iso3, file_format)
+        
+        
+        iso3 = 'DEU'
+        file_format = 'pbf'
+        url = _create_gf_download_url(iso3, file_format)
+        self.assertEqual(url, 'https://download.geofabrik.de/europe/germany-latest.osm.pbf')
+        
+        iso3 = 'DEU'
+        file_format = 'shp'
+        url = _create_gf_download_url(iso3, file_format)
+        self.assertEqual(url, 'https://download.geofabrik.de/europe/germany-latest-free.shp.zip')
+        
+        iso3 = 'RUS-A'
+        file_format = 'pbf'
+        url = _create_gf_download_url(iso3, file_format)
+        self.assertEqual(url, 'https://download.geofabrik.de/asia/russia-latest.osm.pbf')
+        
+        iso3 = 'RUS-E'
+        file_format = 'pbf'
+        url = _create_gf_download_url(iso3, file_format)
+        self.assertEqual(url, 'https://download.geofabrik.de/europe/russia-latest.osm.pbf')
+    
+        
     def test_get_country_geofabrik(self):
-        pass
+        
+        iso3 = 'IC'
+        with tempfile.TemporaryDirectory() as tmpdir:
+            filename = os.path.join(tmpdir, "canary-islands-latest.osm.pbf")
+            get_country_geofabrik(iso3, save_path=tmpdir)
+            self.assertTrue(os.path.exists(filename))
 
     def test_get_region_geofabrik(self):
-        pass
+
+        region = 'central-america'
+        with tempfile.TemporaryDirectory() as tmpdir:
+            filename = os.path.join(tmpdir, "central-america-latest.osm.pbf")
+            get_region_geofabrik(region, save_path=tmpdir)
+            self.assertTrue(os.path.exists(filename))
 
     def test_get_planet_file(self):
         pass
@@ -37,3 +82,4 @@ class TestDownload(unittest.TestCase):
 if __name__ == "__main__":
     TESTS = unittest.TestLoader().loadTestsFromTestCase(TestDownload)
     unittest.TextTestRunner(verbosity=2).run(TESTS)
+
