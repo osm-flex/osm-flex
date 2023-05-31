@@ -60,7 +60,7 @@ class TestClip(unittest.TestCase):
         # Test too small valid input
         geom_list = [shapely.geometry.Polygon([(0, 0), (0.01, 0), (0.01, 0.01), (0, 0.01)])]
         result = _simplify_shapelist(geom_list)
-        self.assertFlase(result) #check if result is empty list
+        self.assertFalse(result) #check if result is empty list
 
         # Test for invalid input type
         with self.assertRaises(TypeError):
@@ -81,10 +81,11 @@ class TestClip(unittest.TestCase):
                 self.assertIn("1.0     1.0", content)
                 self.assertIn("0.0     1.0", content)
                 self.assertIn("END", content)
-
         # Test for invalid input type
-        with self.assertRaises(ValueError):
-            _shapely2poly("invalid_input", "test.poly")
+        with tempfile.TemporaryDirectory() as tmpdir:
+            filename = os.path.join(tmpdir, "test_poly")
+            with self.assertRaises(AttributeError):
+                _shapely2poly("invalid_input", filename)
 
     def test__build_osmosis_cmd(self):
         # Test for bbox input

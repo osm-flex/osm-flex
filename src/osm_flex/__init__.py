@@ -5,7 +5,7 @@ init file
 """
 
 from pathlib import Path
-from osm_flex.config import OSM_DIR, OSM_DATA_DIR, POLY_DIR, EXTRACT_DIR
+from .config import OSM_DIR, OSM_DATA_DIR, POLY_DIR, EXTRACT_DIR
 
 
 def setup_osm_dirs():
