@@ -3,7 +3,7 @@ Set up project
 """
 
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=64.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -13,7 +13,6 @@ maintainers = [
   { name="Elco Koks", email="elco.koks@vu.nl" },
 ]
 description = "Python package for flexible data extraction from OpenStreetMap"
-readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -24,12 +23,20 @@ classifiers = [
 license = {text = "GPL-3.0"}
 keywords = ["OpenStreetMap"]
 dependencies = [
+  'cartopy',
   'geopandas',
-  'numpy', 
+  'numpy',
+  'shapely>=2.0',
   'pandas',
-  'shapely',
-  'tqdm'
+  'tqdm',
 ]
+
+[tool.setuptools.package-data]
+"*" = ["*.ini"]
+
+[project.optional-dependencies]
+tests = ["pytest"]
+docs = ["jupyter"]
 
 [project.urls]
 "Repository" = "https://github.com/ElcoK/osm-flex"
