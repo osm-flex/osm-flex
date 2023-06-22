@@ -2,10 +2,6 @@
 Welcome to OSM-flex!
 ===================
 
-#.. image:: logo_osm-flex.png
-#   :align: center
-#   :alt: OSM-flex Logo
-
 
 Jump right in:
 ##############
@@ -41,7 +37,7 @@ Copyright (C) 2023 OSM-flex contributors listed in :doc:`AUTHORS.md <osm-flex/AU
    index
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Tutorials
    :hidden:
 
