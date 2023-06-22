@@ -16,10 +16,8 @@ __location__ = os.path.join(os.getcwd(), os.path.dirname(
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-
-sys.path.insert(0, os.path.abspath('../'))
-#sys.path.insert(0, os.path.join(__location__, '../src'))
-#module_dir = os.path.join(__location__, "../src/osm-flex")
+sys.path.insert(0, os.path.join(__location__, '../src'))
+module_dir = os.path.join(__location__, "../src/osm_flex")
 
 
 # -- Project information -----------------------------------------------------
@@ -50,7 +48,7 @@ extensions = [
 
 #autoapi
 autoapi_type = 'python'
-autoapi_dirs = '../src/osm-flex'
+autoapi_dirs = '../src/osm_flex'
 
 # The master toctree document.
 master_doc = 'index'
