@@ -1,19 +1,23 @@
 Welcome to osm-flex's documentation!
 ===================================
 
-**Lumache** (/lu'make/) is a Python library for cooks and food lovers
-that creates recipes mixing random ingredients.
-It pulls data from the `Open Food Facts database <https://world.openfoodfacts.org/>`_
-and offers a *simple* and *intuitive* API.
+A Python package for flexible data extraction from OpenStreetMap.
 
 .. note::
 
    This project is under active development.
 
+How to cite
+-----------
+If you use the **OSM-flex**  package in your work, please cite the package directly:
+
+* Koks. E.E., Muhlhofer E., Kropf, C., Riedel, K. (2023). OSM-flex: A Python package for flexible data extraction from OpenStreetMap. Zenodo. (link)
+
 Contents
 --------
 
 .. toctree::
+   :maxdepth: 1
 
    Home <self>
    0_basic_usage
