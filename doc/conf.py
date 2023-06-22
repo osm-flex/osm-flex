@@ -46,6 +46,13 @@ extensions = [
     "sphinx.ext.intersphinx",
 ]
 
+# The suffix of source filenames.
+source_suffix = {
+    ".rst": "restructuredtext",
+    ".md": "markdown",
+}
+
+
 #autoapi
 autoapi_type = 'python'
 autoapi_dirs = '../src/osm_flex'
