@@ -2,6 +2,7 @@
 Welcome to OSM-flex!
 ===================
 
+A Python package for flexible data extraction from OpenStreetMap.
 
 Jump right in:
 ##############
@@ -14,7 +15,7 @@ How to cite
 
 If you use the **OSM-flex**  package in your work, please cite the package directly:
 
-* Koks. E.E. (2023). OSM-flex: A Python package for flexible data extraction from OpenStreetMap. Zenodo. (link)
+* Koks. E.E., Muhlhofer E., Kropf, C., Riedel, K. (2023). OSM-flex: A Python package for flexible data extraction from OpenStreetMap. Zenodo. (link)
 
 License
 #######
@@ -35,6 +36,8 @@ Copyright (C) 2023 OSM-flex contributors listed in :doc:`AUTHORS.md <osm-flex/AU
    :caption: Contents:
 
    index
+   0_basic_usage.ipynb
+   1_clipping_shapes.ipynb
 
 .. toctree::
    :maxdepth: 1
