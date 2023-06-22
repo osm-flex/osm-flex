@@ -27,6 +27,7 @@ dependencies = [
   "pandas",
   "tqdm",
 ]
+readme = "README.md"
 
 [tool.setuptools.package-data]
 "*" = ["*.ini"]

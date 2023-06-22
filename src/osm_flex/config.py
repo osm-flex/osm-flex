@@ -307,19 +307,19 @@ DICT_CIS_OSM =  {
                              telecom='line' or communication='line' or
                              utility='telecom'"""},
         'road' :  {
-            'osm_keys' : ['highway','man_made','name'],
+            'osm_keys' : ['highway','name','maxspeed','lanes','surface'],
             'osm_query' : """highway in ('motorway', 'motorway_link', 'trunk', 'trunk_link',
                             'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary',
                             'tertiary_link', 'residential', 'road', 'unclassified')
                              """},
         'main_road' :  {
-            'osm_keys' : ['highway','man_made','name'],
+            'osm_keys' : ['highway','name','maxspeed','lanes','surface'],
             'osm_query' : """highway in ('primary', 'primary_link', 'secondary',
                              'secondary_link', 'tertiary', 'tertiary_link', 'trunk', 'trunk_link', 
                              'motorway', 'motorway_link')
                             """},
         'rail' : {
-            'osm_keys' : ['railway','name'],
+            'osm_keys' : ['railway','name','gauge','electrified','voltage'],
             'osm_query' : """railway='rail' or railway='tram' or
                              railway='subway' or railway='narrow_gauge' or
                              railway='light_rail' or
