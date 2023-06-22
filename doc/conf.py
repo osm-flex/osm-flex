@@ -27,7 +27,7 @@ sys.path.insert(0, os.path.abspath('../'))
 project = 'OSM-flex'
 copyright = '2023, authors'
 logo_only = True
-html_logo = 'osm-flex_logo.png'
+html_logo = 'logo_osm-flex.png'
 
 # The full version, including alpha/beta/rc tags
 release = '0.1.0'
@@ -51,6 +51,9 @@ extensions = [
 #autoapi
 autoapi_type = 'python'
 autoapi_dirs = '../src/osm-flex'
+
+# The master toctree document.
+master_doc = 'index'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

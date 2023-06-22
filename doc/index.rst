@@ -2,7 +2,7 @@
 Welcome to OSM-flex!
 ===================
 
-.. image:: doc/osm-flex_logo.png
+.. image:: logo_osm-flex.png
    :align: center
    :alt: OSM-flex Logo
 
@@ -19,9 +19,9 @@ Jump right in:
 How to cite
 ###########
 
-If you use the **OSM** in your work, please cite the package directly:
+If you use the **OSM-flex**  package in your work, please cite the package directly:
 
-* Koks. E.E. (2022). DamageScanner: Python tool for natural hazard damage assessments. Zenodo. http://doi.org/10.5281/zenodo.2551015
+* Koks. E.E. (2023). OSM-flex: (subtitle). Zenodo. (link)
 
 License
 #######
