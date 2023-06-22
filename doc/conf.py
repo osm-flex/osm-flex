@@ -37,7 +37,6 @@ release = '0.1.0'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "nbsphinx",
     "sphinx.ext.duration",
     "sphinx.ext.doctest",
     "sphinx.ext.autodoc",
@@ -45,6 +44,7 @@ extensions = [
     "autoapi.extension",
     "sphinx.ext.autosummary",
     "sphinx.ext.intersphinx",
+    "nbsphinx"   
 ]
 
 # The suffix of source filenames.
