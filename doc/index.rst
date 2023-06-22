@@ -2,17 +2,16 @@
 Welcome to OSM-flex!
 ===================
 
-.. image:: logo_osm-flex.png
-   :align: center
-   :alt: OSM-flex Logo
+#.. image:: logo_osm-flex.png
+#   :align: center
+#   :alt: OSM-flex Logo
 
 
 Jump right in:
 ##############
-
 * :doc:`README <osm-flex/README>`
 * :doc:`Overview <0_basic_usage>`
-* `GitHub Repository OSM-flex <https://github.com/osm-flex/osm-flex> `
+* `GitHub Repository <https://github.com/osm-flex/osm-flex>`_
 
 How to cite
 ###########
@@ -41,6 +40,14 @@ Copyright (C) 2023 OSM-flex contributors listed in :doc:`AUTHORS.md <osm-flex/AU
 
    index
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Tutorials
+   :hidden:
+
+   Basic Functionalities <doc/0_basic_usage>
+   Advanced Stuff <doc/1_clipping_shapes>
+   
 .. toctree::
    :caption: Miscellaneous
    :hidden:
