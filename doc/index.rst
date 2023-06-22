@@ -10,10 +10,9 @@ Welcome to OSM-flex!
 Jump right in:
 ##############
 
-* :doc:`README <osm_flex/README>`
+* :doc:`README <osm-flex/README>`
 * :doc:`Overview <0_basic_usage>`
-* `GitHub Repository `osm-flex <https://github.com/osm-flex/osm-flex>`_
-
+* `GitHub Repository OSM-flex <https://github.com/osm-flex/osm-flex> `
 
 How to cite
 ###########
