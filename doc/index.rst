@@ -18,12 +18,10 @@ License
 Copyright (C) 2023 OSM-flex contributors listed in :doc:`AUTHORS.md <osm-flex/AUTHORS>`. All versions released under the **GNU-GPL 3 license**.
 
 
-```{toctree}
----
-maxdepth: 2
-caption: Contents:
----
-index
-0_basic_usage
-1_clipping_shapes
-```
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   index
+   0_basic_usage
+   1_clipping_shapes
