@@ -10,10 +10,9 @@ Welcome to OSM-flex!
 Jump right in:
 ##############
 
-
-* :doc:`README <osm-flex/README>`_
-* :doc:`Overview <0_basic_usage>`_
-* `GitHub Repository `osm-flex <https://https://github.com/osm-flex/osm-flex>`_
+* :doc:`README <osm_flex/README>`
+* :doc:`Overview <0_basic_usage>`
+* `GitHub Repository `osm-flex <https://github.com/osm-flex/osm-flex>`_
 
 
 How to cite
@@ -21,7 +20,7 @@ How to cite
 
 If you use the **OSM-flex**  package in your work, please cite the package directly:
 
-* Koks. E.E. (2023). OSM-flex: (subtitle). Zenodo. (link)
+* Koks. E.E. (2023). OSM-flex: A Python package for flexible data extraction from OpenStreetMap. Zenodo. (link)
 
 License
 #######
