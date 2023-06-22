@@ -19,6 +19,7 @@ Copyright (C) 2023 OSM-flex contributors listed in :doc:`AUTHORS.md <osm-flex/AU
 
 
 .. toctree::
+   :hidden:
    :maxdepth: 2
 
    index
