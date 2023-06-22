@@ -24,8 +24,6 @@ maxdepth: 2
 caption: Contents:
 ---
 index
-caption: Tutorials:
----
 0_basic_usage
 1_clipping_shapes
 ```
