@@ -4,11 +4,6 @@ Welcome to OSM-flex!
 
 A Python package for flexible data extraction from OpenStreetMap.
 
-Jump right in:
-##############
-* :doc:`README <osm-flex/README>`
-* :doc:`Overview <0_basic_usage>`
-* `GitHub Repository <https://github.com/osm-flex/osm-flex>`_
 
 How to cite
 ###########
@@ -22,32 +17,17 @@ License
 
 Copyright (C) 2023 OSM-flex contributors listed in :doc:`AUTHORS.md <osm-flex/AUTHORS>`. All versions released under the **GNU-GPL 3 license**.
 
-.. ifconfig:: readthedocs
-
-   .. hint::
-
-      ReadTheDocs hosts multiple versions of this documentation.
-      Use the drop-down menu on the bottom left to switch versions.
-      ``stable`` refers to the most recent release, whereas ``latest`` refers to the latest development version.
-
-
 .. toctree::
    :maxdepth: 1
    :caption: Contents:
 
    index
+
+   :caption: Tutorials
+
    0_basic_usage.ipynb
    1_clipping_shapes.ipynb
 
-.. toctree::
-   :maxdepth: 1
-   :caption: Tutorials
-   :hidden:
-
-   Basic Functionalities <doc/0_basic_usage>
-   Advanced Stuff <doc/1_clipping_shapes>
-   
-.. toctree::
    :caption: Miscellaneous
    :hidden:
 
