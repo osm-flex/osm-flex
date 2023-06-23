@@ -8,7 +8,6 @@
 
 import os
 import sys
-import inspect
 
 __location__ = os.path.dirname(os.path.abspath(__file__))
 

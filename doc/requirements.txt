@@ -155,6 +155,7 @@ sphinx==5.0.2
     #   -r doc/requirements.in
     #   nbsphinx
     #   sphinx-rtd-theme
+sphinx-autoapi>=1.8.0
 sphinx-rtd-theme==1.0.0
     # via -r doc/requirements.in
 sphinxcontrib-applehelp==1.0.2
