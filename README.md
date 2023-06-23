@@ -1,5 +1,7 @@
 # osm-flex
 
+<img align="right" width="200" alt="Logo" src="https://raw.githubusercontent.com/osm-flex/osm-flex/feature/readthedocs/doc/logo_osm-flex.png">
+
 [![github repo badge](https://img.shields.io/badge/github-repo-000.svg?logo=github&labelColor=gray&color=blue)](https://github.com/osm-flex/osm-flex)
 [![github license badge](https://img.shields.io/github/license/osm-flex/osm-flex)](https://github.com/osm-flex/osm-flex)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2551015.svg)](https://doi.org/10.5281/zenodo.2551015) 
