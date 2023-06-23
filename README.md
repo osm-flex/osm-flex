@@ -53,7 +53,7 @@ from osm_flex.config import OSM_DATA_DIR
 
 path_che_dump = OSM_DATA_DIR.joinpath('switzerland-latest.osm.pbf')
 
-gdf_ch_education = extract_cis(path_che_dump, 'education')
+gdf_ch_education = ex.extract_cis(path_che_dump, 'education')
 
 gdf_ch_forest = ex.extract(
 	path_che_dump, 'multipolygons', ['landuse', 'name'], "landuse='forest'"
