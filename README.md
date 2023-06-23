@@ -38,7 +38,7 @@ This package requires shapely v2.0 or later. Installing this package in an exist
 ## Example
 Download osm data for Switzerland from geofabrik.
 
-```
+```python
 import osm_flex.download as dl
 
 iso3 = 'CHE'
