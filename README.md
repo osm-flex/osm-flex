@@ -47,7 +47,7 @@ dl.get_country_geofabrik(iso3)
 
 Extract all buildings related to education and extract all polygons with forests.
 
-```
+```python
 import osm_flex.extract as ex
 from osm_flex.config import OSM_DATA_DIR
 
