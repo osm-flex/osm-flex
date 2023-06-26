@@ -2,7 +2,7 @@
 
 ## v0.2.0
 
-Release date: yyyy-mm-dd
+Release date: 2023-06-26
 
 ### Description
 
