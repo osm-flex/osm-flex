@@ -8,7 +8,7 @@
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/osm-flex?color=yellow&label=Downloads)](https://pypistats.org/packages/osm-flex)
 [![Documentation Status](https://readthedocs.org/projects/osm-flex/badge/?version=latest)](https://osm-flex.readthedocs.io/en/latest/?badge=latest)
 [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8B-yellow)](https://fair-software.eu)
-[![DOI](https://zenodo.org/badge/621262279.svg)](https://zenodo.org/badge/latestdoi/621262279)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8082964.svg)](https://doi.org/10.5281/zenodo.8082964)
 
 Python package for flexible data extraction from OpenStreetMap. This packages allows to 
 
