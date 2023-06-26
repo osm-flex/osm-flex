@@ -1,0 +1,5 @@
+# requirements.in
+ipykernel
+nbsphinx
+Sphinx
+sphinx-rtd-theme

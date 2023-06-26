@@ -162,21 +162,21 @@ def _build_osmconvert_cmd(shape, osmpbf_clip_from, osmpbf_output):
         file path (incl. name & ending) under which extract will be stored
     """
 
-    if isinstance(shape, (pathlib.PosixPath, str)):
+    if isinstance(shape, (pathlib.Path, str)):
         return [str(OSMCONVERT_PATH), str(osmpbf_clip_from), f'-B={str(shape)}',
-                '--complete-ways', '--complete-multipolygons', 
+                '--complete-ways', '--complete-multipolygons',
                 f'-o={osmpbf_output}'
                 ]
     if isinstance(shape[0], (float, int)):
-        return [str(OSMCONVERT_PATH), str(osmpbf_clip_from), 
+        return [str(OSMCONVERT_PATH), str(osmpbf_clip_from),
                 '-b='+str(shape[0])+','+str(shape[1])+','+str(shape[2])+','+str(shape[3]),
                 '--complete-ways', '--complete-multipolygons',
                 f'-o={osmpbf_output}'
                 ]
-    
+
 def _osmconvert_clip(shape, osmpbf_clip_from, osmpbf_output,
                      overwrite=False):
-        
+
     osmpbf_clip_from = pathlib.Path(osmpbf_clip_from)
     if not osmpbf_clip_from.suffix:
         osmpbf_clip_from = osmpbf_clip_from.with_suffix('.osm.pbf')
@@ -211,7 +211,7 @@ def _build_osmosis_cmd(shape, osmpbf_clip_from, osmpbf_output):
     osmpbf_output : str or pathlib.Path
         file path (incl. name & ending) under which extract will be stored
     """
-    if isinstance(shape, (pathlib.PosixPath, str)):
+    if isinstance(shape, (pathlib.Path, str)):
         return ['osmosis', '--read-pbf', 'file='+str(osmpbf_clip_from),
             '--bounding-polygon', 'file='+str(shape), '--write-pbf',
             'file='+str(osmpbf_output)]
@@ -222,10 +222,10 @@ def _build_osmosis_cmd(shape, osmpbf_clip_from, osmpbf_output):
             '--write-pbf', 'file='+str(osmpbf_output)]
 
     raise ValueError('''shape does not have the correct format.
-                        Only bounding boxes, shapely (multi-)polygons or 
+                        Only bounding boxes, shapely (multi-)polygons or
                         filepaths to .poly files are allowed''')
 
-    
+
 def _osmosis_clip(shape, osmpbf_clip_from, osmpbf_output,
                   overwrite=False):
     """
