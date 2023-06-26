@@ -51,15 +51,22 @@ Extract all buildings related to education and extract all polygons with forests
 import osm_flex.extract as ex
 from osm_flex.config import OSM_DATA_DIR
 
-path_che_dump = OSM_DATA_DIR.joinpath('switzerland-latest.osm.pbf')
-
-gdf_ch_education = ex.extract_cis(path_che_dump, 'education')
-
-gdf_ch_forest = ex.extract(
-	path_che_dump, 'multipolygons', ['landuse', 'name'], "landuse='forest'"
-	)                      
+path_che_dump = OSM_DATA_DIR.joinpath('switzerland-latest.osm.pbf')              
 ```
 
+```python
+gdf_ch_education = ex.extract_cis(path_che_dump, 'education')    
+```
+<img title="Education" alt="Education GeodataFrame" src="./doc/education_ch.jp2">
+
+
+```python
+gdf_ch_forest = ex.extract(
+	path_che_dump, 'multipolygons', ['landuse', 'name'], "landuse='forest'"
+	)    
+```
+
+<img title="Forests" alt="Forest map " src="./doc/forest_ch.jp2">
 
 
 ## Running Tests
