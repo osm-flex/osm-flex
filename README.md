@@ -57,7 +57,7 @@ path_che_dump = OSM_DATA_DIR.joinpath('switzerland-latest.osm.pbf')
 ```python
 gdf_ch_education = ex.extract_cis(path_che_dump, 'education')    
 ```
-<img title="Education" alt="Education GeodataFrame" src="./doc/education_ch.jp2">
+<img title="Education" alt="Education GeodataFrame" src="./doc/education_ch.png">
 
 
 ```python
@@ -66,7 +66,7 @@ gdf_ch_forest = ex.extract(
 	)    
 ```
 
-<img title="Forests" alt="Forest map " src="./doc/forest_ch.jp2">
+<img title="Forests" alt="Forest map " src="./doc/forest_ch.pdf">
 
 
 ## Running Tests
