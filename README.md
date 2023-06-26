@@ -66,7 +66,7 @@ gdf_ch_forest = ex.extract(
 	)    
 ```
 
-<img title="Forests" alt="Forest map " src="./doc/forest_ch.pdf">
+<img title="Forests" alt="Forest map " src="./doc/forest_ch.png">
 
 
 ## Running Tests
