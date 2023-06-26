@@ -6,15 +6,19 @@ Release date: yyyy-mm-dd
 
 ### Description
 
-### Dependency Changes
+First release. 
 
 ### Changed
 
+* Update readme and add graphics.
+* Add conf.py for sphinx configuration.
+* Add index.rst, requirements.txt, requirements.in for documentation building.
+* Add logo.
+* Publish [documentation] (https://osm-flex.readthedocs.io/en/latest).
+
 ### Fixed
 
-### Deprecated
-
-### Removed
+* Fix poxit path on windows [Issue #9](https://github.com/osm-flex/osm-flex/issues/9).
 
 
 ## v0.1.0
@@ -23,7 +27,7 @@ Release date: 2023-06-22
 
 ### Description
 
-First release.
+First alpha release.
 
 ### Dependency Changes
 Added:
