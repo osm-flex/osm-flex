@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "osm-flex"
-version = "0.1.0"
+version = "1.0.1"
 maintainers = [
   { name = "Elco Koks", email = "elco.koks@vu.nl" },
 ]
