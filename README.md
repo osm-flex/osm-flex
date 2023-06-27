@@ -33,6 +33,9 @@ NOTE
 
 This package requires shapely v2.0 or later. Installing this package in an existing environment might overwrite older versions. 
 
+
+The (optional) clipping functionalities require manual installation of osmconvert or osmosis. See tutorial 1 for details.
+
 ---
 
 ## Example
