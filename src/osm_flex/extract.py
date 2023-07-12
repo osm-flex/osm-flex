@@ -27,7 +27,7 @@ DATA_DIR = '' #TODO: dito, where & how to define
 gdal.SetConfigOption("OSM_CONFIG_FILE", str(OSM_CONFIG_FILE))
 
 
-def _query_builder( geo_type, constraint_dict):
+def _query_builder(geo_type, constraint_dict):
     """
     This function builds an SQL query from the values passed to the extract()
     function.
@@ -48,11 +48,13 @@ def _query_builder( geo_type, constraint_dict):
     for key in constraint_dict['osm_keys']:
         query+= ","+ key
     # filter condition(s)
-    query+= " FROM " + geo_type + " WHERE " + constraint_dict['osm_query']
-
+    if constraint_dict['osm_query'] is not None:
+        query+= " FROM " + geo_type + " WHERE " + constraint_dict['osm_query']
+    else:
+        query += " FROM " + geo_type + f" WHERE {constraint_dict['osm_keys'][0]} IS NOT NULL"
     return query
 
-def extract(osm_path, geo_type, osm_keys, osm_query):
+def extract(osm_path, geo_type, osm_keys, osm_query=None):
     """
     Function to extract geometries and tag info for entires in the OSM file
     matching certain OSM key-value constraints.
@@ -68,8 +70,8 @@ def extract(osm_path, geo_type, osm_keys, osm_query):
         a list with all the osm keys that should be reported as columns in
         the output gdf.
     osm_query : str
-        query string of the syntax
-        "key(='value') (and/or further queries)".
+        optional. query string of the syntax
+        "key='value' (and/or further queries)".
         See examples in DICT_CIS_OSM in case of doubt.
 
     Returns
