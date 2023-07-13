@@ -35,6 +35,16 @@ class TestExtractionFunctions(unittest.TestCase):
                          np.array(['MultiPolygon']))
         self.assertTrue(len(gdf_mp)==4202)
         
+        gdf_mp2 = extract(OSM_FILE, 'multipolygons',  ['building', 'name'])
+        self.assertIsInstance(gdf_mp2, gpd.GeoDataFrame)
+        self.assertEqual(set(gdf_mp2.columns), 
+                         set(['osm_id', 'building', 'name', 'geometry']))
+        self.assertEqual(np.unique(gdf_mp2.geometry.type), 
+                         np.array(['MultiPolygon']))
+        self.assertEqual(len(gdf_mp2),5050)
+        self.assertFalse(any(elem is None for elem in gdf_mp2.building))
+        
+        
         gdf_line = extract(OSM_FILE, 'lines', ['name', 'highway'], 
                            "highway='residential'")
         self.assertIsInstance(gdf_line, gpd.GeoDataFrame)
@@ -43,6 +53,25 @@ class TestExtractionFunctions(unittest.TestCase):
         self.assertEqual(np.unique(gdf_line.geometry.type), 
                          np.array(['LineString']))
         self.assertTrue(len(gdf_line)==1807)
+        
+        gdf_line2 = extract(OSM_FILE, 'lines', ['highway','name'], None)
+        self.assertIsInstance(gdf_line2, gpd.GeoDataFrame)
+        self.assertEqual(set(gdf_line2.columns), 
+                         set(['osm_id', 'name', 'highway', 'geometry']))
+        self.assertEqual(np.unique(gdf_line2.geometry.type), 
+                         np.array(['LineString']))
+        self.assertEqual(len(gdf_line2),3266)
+        self.assertFalse(any(elem is None for elem in gdf_line2.highway))
+        
+        gdf_line3 = extract(OSM_FILE, 'lines', ['highway'], None)
+        self.assertIsInstance(gdf_line3, gpd.GeoDataFrame)
+        self.assertEqual(set(gdf_line3.columns), 
+                         set(['osm_id', 'highway', 'geometry']))
+        self.assertEqual(np.unique(gdf_line3.geometry.type), 
+                         np.array(['LineString']))
+        self.assertEqual(len(gdf_line3),3266)
+        self.assertFalse(any(elem is None for elem in gdf_line3.highway))
+
         
         # TODO: test with invalid geo_type
 
@@ -74,6 +103,14 @@ class TestExtractionFunctions(unittest.TestCase):
         query = _query_builder(geo_type, constraint_dict)
         self.assertEqual(query,
                          "SELECT osm_id,name,highway FROM points WHERE highway='residential'")
+        
+        geo_type = 'points'
+        constraint_dict = {'osm_keys': ['name', 'highway'],
+                           'osm_query' : None}
+        query = _query_builder(geo_type, constraint_dict)
+        self.assertEqual(query,
+                         'SELECT osm_id,name,highway FROM points WHERE name IS NOT NULL')
+        
       
     def test_qb_error(self):
         geo_type = 'points'
