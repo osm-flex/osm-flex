@@ -35,7 +35,7 @@ class TestExtractionFunctions(unittest.TestCase):
                          np.array(['MultiPolygon']))
         self.assertTrue(len(gdf_mp)==4202)
         
-        gdf_mp2 = extract(OSM_FILE, 'multipolygons',  ['building', 'name', ])
+        gdf_mp2 = extract(OSM_FILE, 'multipolygons',  ['building', 'name'])
         self.assertIsInstance(gdf_mp2, gpd.GeoDataFrame)
         self.assertEqual(set(gdf_mp2.columns), 
                          set(['osm_id', 'building', 'name', 'geometry']))
@@ -63,6 +63,15 @@ class TestExtractionFunctions(unittest.TestCase):
         self.assertEqual(len(gdf_line2),3266)
         self.assertFalse(any(elem is None for elem in gdf_line2.highway))
         
+        gdf_line3 = extract(OSM_FILE, 'lines', ['highway'], None)
+        self.assertIsInstance(gdf_line3, gpd.GeoDataFrame)
+        self.assertEqual(set(gdf_line3.columns), 
+                         set(['osm_id', 'highway', 'geometry']))
+        self.assertEqual(np.unique(gdf_line3.geometry.type), 
+                         np.array(['LineString']))
+        self.assertEqual(len(gdf_line3),3266)
+        self.assertFalse(any(elem is None for elem in gdf_line3.highway))
+
         
         # TODO: test with invalid geo_type
 

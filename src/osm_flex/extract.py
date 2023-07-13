@@ -57,7 +57,7 @@ def _query_builder(geo_type, constraint_dict):
 def extract(osm_path, geo_type, osm_keys, osm_query=None):
     """
     Function to extract geometries and tag info for entires in the OSM file
-    matching certain OSM key-value constraints.
+    matching certain OSM keys, or key-value constraints.
     from an OpenStreetMap osm.pbf file.
 
     Parameters
@@ -71,7 +71,8 @@ def extract(osm_path, geo_type, osm_keys, osm_query=None):
         the output gdf.
     osm_query : str
         optional. query string of the syntax
-        "key='value' (and/or further queries)".
+        "key='value' (and/or further queries)". If left empty, all objects
+        for which the first entry of osm_keys is not Null will be parsed.
         See examples in DICT_CIS_OSM in case of doubt.
 
     Returns
@@ -93,6 +94,10 @@ def extract(osm_path, geo_type, osm_keys, osm_query=None):
     search dict, but not in the osmconf.ini
     E.g. tower:type is called tower_type, since it would interfere with the
     SQL syntax otherwise, but still tower:type in the osmconf.ini
+    3) If the osm_query is left empty (None), then all objects will be parsed
+    for which the first entry of osm_keys is not Null. E.g. if osm_keys = 
+    ['building', 'name'] and osm_query = None, then all items matching 
+    building=* will be parsed.
 
     See also
     --------
