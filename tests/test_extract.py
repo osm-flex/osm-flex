@@ -132,14 +132,14 @@ class TestExtractionFunctions(unittest.TestCase):
         gdf = gpd.GeoDataFrame(
             geometry = [
                 sh.Point(1.0, -1.0),
-                LineString([[0, 0], [1, 0], [1, 1]]),
+                sh.LineString([[0, 0], [1, 0], [1, 1]]),
                 polygon1,
                 polygon2
             ])
         gdf_no_small_poly = gpd.GeoDataFrame(
             geometry = [
                 sh.Point(1.0, -1.0),
-                LineString([[0, 0], [1, 0], [1, 1]]),
+                sh.LineString([[0, 0], [1, 0], [1, 1]]),
                 polygon1,
             ])
         gpd.testing.assert_geodataframe_equal(remove_small_polygons(gdf, 0.5), gdf)
