@@ -223,4 +223,4 @@ def remove_small_polygons(gdf, min_area):
 
     gdf_temp['geometry'] = gdf_temp.apply(lambda row: make_valid(row.geometry), axis=1)
 
-    return gdf_temp[(gdf_temp['geometry'].area > min_area) or (gdf_temp['geometry'].area == 0)]
+    return gdf_temp[(gdf_temp['geometry'].area > min_area) | (gdf_temp['geometry'].area == 0)]
