@@ -194,33 +194,3 @@ def extract_cis(osm_path, ci_type):
         LOGGER.warning('feature not in DICT_CIS_OSM. Returning empty gdf')
         gdf = gpd.GeoDataFrame()
     return gdf
-
-def remove_small_polygons(gdf, min_area):
-    """Remove (multi-)polygons of area smaller than min_area
-    Points and lines are untouched.
-
-    Note: a buffer of 1e-10 is added to invalid geometries
-
-    Parameters
-    ----------
-    gdf : GeoDataFrame
-        geodataframe with polygons
-    min_area : float
-        minimal value of area
-
-    Return
-    ------
-    GeoDataFrame:
-        entry geodataframe without (multi-)polygons smaller than min_area
-    """
-
-    gdf_temp = gdf.copy()
-
-    def make_valid(geometry):
-        if geometry.is_valid:
-            return geometry
-        return geometry.buffer(1e-10)
-
-    gdf_temp['geometry'] = gdf_temp.apply(lambda row: make_valid(row.geometry), axis=1)
-
-    return gdf_temp[(gdf_temp['geometry'].area > min_area) | (gdf_temp['geometry'].area == 0)]

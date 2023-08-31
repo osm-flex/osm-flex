@@ -124,30 +124,6 @@ class TestExtractionFunctions(unittest.TestCase):
         #self.assertTrue('osm_keys' in context.exception)
         #self.assertTrue(KeyError in context.exception)
 
-    def test_remove_small_polygons(self):
-        coords1 = ((0., 0.), (0., 1.), (1., 1.), (1., 0.), (0., 0.)) #area=1
-        polygon1 = sh.Polygon(coords1)
-        coords2 = ((0., 0.), (0., 0.1), (0.1, 0.1), (0.1, 0.), (0., 0.)) #area=0.01
-        polygon2 = sh.Polygon(coords2)
-        
-        gdf_small_poly = gpd.GeoDataFrame(
-            geometry = [
-                sh.Point(1.0, -1.0),
-                sh.LineString([[0, 0], [1, 0], [1, 1]]),
-                polygon1,
-                polygon2
-            ])
-        
-        gdf_no_small_poly = gpd.GeoDataFrame(
-            geometry = [
-                sh.Point(1.0, -1.0),
-                sh.LineString([[0, 0], [1, 0], [1, 1]]),
-                polygon1,
-            ])
-        
-        gdf_removed = remove_small_polygons(gdf_small_poly, 0.5)
-        
-        self.assertTrue((gdf_removed == gdf_no_small_poly).all().values[0])
         
 if __name__ == "__main__":
     TESTS = unittest.TestLoader().loadTestsFromTestCase(TestExtractionFunctions)
