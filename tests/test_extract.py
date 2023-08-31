@@ -15,7 +15,7 @@ import unittest
 import geopandas as gpd
 import numpy as np
 import shapely as sh
-from osm_flex.extract import extract, extract_cis, _query_builder, remove_small_polygons
+from osm_flex.extract import extract, extract_cis, _query_builder
 from pathlib import Path
 
 PATH_TEST_DATA = Path(__file__).parent / 'data'
