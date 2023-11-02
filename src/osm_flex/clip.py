@@ -160,19 +160,23 @@ def _build_osmconvert_cmd(shape, osmpbf_clip_from, osmpbf_output):
         file path to planet.osm.pbf or other osm.pbf file to clip
     osmpbf_output : str or pathlib.Path
         file path (incl. name & ending) under which extract will be stored
+        
+    Note
+    -----
+    If cross-border multi-polygons or lines should be retained, comment out
+    below options '--complete-ways' and '--complete-multipolygons'. This only
+    works with parent files < 2GB.
     """
 
     if isinstance(shape, (pathlib.Path, str)):
         return [str(OSMCONVERT_PATH), str(osmpbf_clip_from), f'-B={str(shape)}',
-                '--complete-ways', '--complete-multipolygons',
                 f'-o={osmpbf_output}'
-                ]
+                ] #'--complete-ways', '--complete-multipolygons' # add option
     if isinstance(shape[0], (float, int)):
         return [str(OSMCONVERT_PATH), str(osmpbf_clip_from),
                 '-b='+str(shape[0])+','+str(shape[1])+','+str(shape[2])+','+str(shape[3]),
-                '--complete-ways', '--complete-multipolygons',
                 f'-o={osmpbf_output}'
-                ]
+                ] # '--complete-ways', '--complete-multipolygons' # add option
 
 def _osmconvert_clip(shape, osmpbf_clip_from, osmpbf_output,
                      overwrite=False):
@@ -334,10 +338,11 @@ def clip_from_poly(poly_file, osmpbf_clip_from, osmpbf_output,
 
     Note
     ----
-    This function uses by default the command line tool osmosis
-    to cut out new osm.pbf files from the original ones.
-    Installation instructions (windows, linux, macos) - see
-    https://wiki.openstreetmap.org/wiki/Osmosis/Installation
+    This function uses the command line tool osmosis or osmconvert to clip 
+    new osm.pbf files from the original ones.
+    Installation instructions (windows, linux, apple) - see
+    https://wiki.openstreetmap.org/wiki/Osmosis/Installation or 
+    https://wiki.openstreetmap.org/wiki/Osmconvert
     """
     if kernel == 'osmosis':
         _osmosis_clip(poly_file, osmpbf_clip_from, osmpbf_output, overwrite)
@@ -374,10 +379,12 @@ def clip_from_shapes(shape_list, osmpbf_clip_from, osmpbf_output,
 
     Note
     ----
-    This function uses the command line tool osmosis to cut out new
-    osm.pbf files from the original ones.
+    This function uses the command line tool osmosis or osmconvert to clip 
+    new osm.pbf files from the original ones.
     Installation instructions (windows, linux, apple) - see
-    https://wiki.openstreetmap.org/wiki/Osmosis/Installation
+    https://wiki.openstreetmap.org/wiki/Osmosis/Installation or 
+    https://wiki.openstreetmap.org/wiki/Osmconvert 
+    
     """
 
     shape_list = _simplify_shapelist(shape_list)
