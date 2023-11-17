@@ -8,7 +8,7 @@ OSM-flex is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 -----
-test extraction functions
+test simplification functions
 """
 
 import unittest
@@ -47,6 +47,19 @@ class TestSimplificationFunctions(unittest.TestCase):
         
         self.assertTrue((gdf_removed == gdf_no_small_poly).all().values[0])
         
+    def test_remove_contained_points(self):
+        pass
+    
+    
+    def test_remove_contained_polys(self):
+        pass
+    
+    def test_remove_exact_duplicates(self):
+        pass
+
+
+
+
 if __name__ == "__main__":
     TESTS = unittest.TestLoader().loadTestsFromTestCase(TestSimplificationFunctions)
     unittest.TextTestRunner(verbosity=2).run(TESTS)
