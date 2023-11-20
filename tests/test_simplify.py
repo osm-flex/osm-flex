@@ -70,7 +70,9 @@ class TestSimplificationFunctions(unittest.TestCase):
         # get rid of point2
         gdf_simple  = remove_contained_points(gdf_pnt_in_poly)
         
-        self.assertTrue((gdf_check == gdf_simple).all().values[0])
+        self.assertTrue(
+            (gdf_check.geometry.values == gdf_simple.geometry.values).all())
+    
     
     def test_remove_contained_polys(self):
         """ test function remove_contained_polys() """
@@ -86,7 +88,8 @@ class TestSimplificationFunctions(unittest.TestCase):
         # get rid of polygon2
         gdf_simple = remove_contained_polys(gdf_poly_in_poly)
         
-        self.assertTrue((gdf_check == gdf_simple).all().values[0])
+        self.assertTrue(
+            (gdf_check.geometry.values == gdf_simple.geometry.values).all())
         
     
     def test_remove_exact_duplicates(self):
@@ -103,7 +106,8 @@ class TestSimplificationFunctions(unittest.TestCase):
             geometry = [polygon1, point1, line1
             ])
         
-        self.assertTrue((gdf_check == gdf_simple).all().values[0])
+        self.assertTrue(
+            (gdf_check.geometry.values == gdf_simple.geometry.values).all())
 
 if __name__ == "__main__":
     TESTS = unittest.TestLoader().loadTestsFromTestCase(TestSimplificationFunctions)
