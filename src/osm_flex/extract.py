@@ -95,8 +95,8 @@ def extract(osm_path, geo_type, osm_keys, osm_query=None):
     E.g. tower:type is called tower_type, since it would interfere with the
     SQL syntax otherwise, but still tower:type in the osmconf.ini
     3) If the osm_query is left empty (None), then all objects will be parsed
-    for which the first entry of osm_keys is not Null. E.g. if osm_keys = 
-    ['building', 'name'] and osm_query = None, then all items matching 
+    for which the first entry of osm_keys is not Null. E.g. if osm_keys =
+    ['building', 'name'] and osm_query = None, then all items matching
     building=* will be parsed.
 
     See also
@@ -109,7 +109,7 @@ def extract(osm_path, geo_type, osm_keys, osm_query=None):
     """
     if not Path(osm_path).is_file():
         raise ValueError(f"the given path is not a file: {osm_path}")
-    
+
     osm_path = str(osm_path)
     constraint_dict = {
         'osm_keys' : osm_keys,
@@ -175,7 +175,7 @@ def extract_cis(osm_path, ci_type):
 
     # features consisting in multipolygon results:
     elif ci_type in ['air']:
-        gdf = extract(osm_path, 'multipolygons', 
+        gdf = extract(osm_path, 'multipolygons',
                       DICT_CIS_OSM[ci_type]['osm_keys'],
                       DICT_CIS_OSM[ci_type]['osm_query'])
 
