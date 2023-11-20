@@ -43,49 +43,56 @@ def remove_small_polygons(gdf, min_area):
     gdf_temp['geometry'] = gdf_temp.apply(lambda row: make_valid(row.geometry),
                                           axis=1)
 
-    return gdf_temp[(gdf_temp['geometry'].area > min_area) | 
+    return gdf_temp[(gdf_temp['geometry'].area > min_area) |
                     (gdf_temp['geometry'].area == 0)]
 
 
 def remove_contained_points(gdf_p_mp):
     """
-    from a GeoDataFrame containing points and multipolygons, remove those points
-    that are contained in a multipolygons entry.
+    from a GeoDataFrame containing points and (multi-)polygons, remove those
+    points that are contained in a multipolygons entry.
     Resets the index of the dataframe.
-    
+
     Parameters
     ----------
     gdf_p_mp : gpd.GeoDataFrame
         GeoDataFrame containing entries with point and (multi-)polygon geometry
     """
-    
+
     gdf_p_mp = gdf_p_mp.reset_index(drop=True)
-    
+
     ind_dupl = np.unique(gpd.sjoin(gdf_p_mp[gdf_p_mp.geometry.type=='Point'],
-              gdf_p_mp[gdf_p_mp.geometry.type=='MultiPolygon'], 
+              gdf_p_mp[(gdf_p_mp.geometry.type=='MultiPolygon')|
+                       (gdf_p_mp.geometry.type=='Polygon')],
               predicate='within').index)
-        
+
     return gdf_p_mp.drop(index=ind_dupl)
 
 
 def remove_contained_polys(gdf):
     """
-    from a GeoDataFrame containing multipolygons (and potentially other 
-    geometries), remove those entries with polygons that are already fully 
-    contained in another polygon entry. Removes smaller polygons within polgons
-    and full duplicates.
-    
+    from a GeoDataFrame containing (multi-)polygons (and potentially other
+    geometries), remove those polygon entries that are already fully
+    contained in another polygon entries. Removes smaller polygons within 
+    polygons and full duplicates, but leaves contained points untouched 
+    (see remove_contained_points() for this).
+
     Resets the index of the dataframe.
-    
+
     Parameters
     ----------
     gdf : gpd.GeoDataFrame
         GeoDataFrame containing entries with (multi-)polygon geometry
     """
-    
+
     gdf = gdf.reset_index(drop=True)
-    
-    contained = gpd.sjoin(gdf, gdf, predicate='contains')
+
+    contained = gpd.sjoin(
+        gdf[(gdf.geometry.type=='MultiPolygon')| (gdf.geometry.type=='Polygon')],
+        gdf[(gdf.geometry.type=='MultiPolygon')| (gdf.geometry.type=='Polygon')],
+        predicate='contains'
+        )
+
     subset = contained[contained.index != contained.index_right]
     to_drop = set(subset.index_right) - set(subset.index)
 
@@ -94,19 +101,19 @@ def remove_contained_polys(gdf):
 
 def remove_exact_duplicates(gdf):
     """
-    from a GeoDataFrame containing any sort of geometries, remove those entries 
+    from a GeoDataFrame containing any sort of geometries, remove those entries
     which already have an exact duplicate geometry entry.
-    
+
     Resets the index of the dataframe.
-    
+
     Parameters
     ----------
     gdf : gpd.GeoDataFrame
         GeoDataFrame containing any types of geometry
     """
-    
+
     gdf = gdf.reset_index(drop=True)
 
     geom_wkb = gdf["geometry"].apply(lambda geom: geom.wkb)
-    
+
     return gdf.loc[geom_wkb.drop_duplicates().index]
