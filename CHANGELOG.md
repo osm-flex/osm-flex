@@ -1,4 +1,23 @@
 # Changelog
+## v1.2.0
+
+Release date: 2023-11-21
+
+### Description
+
+Second release. 
+
+### Added
+* simplify module for simple cleaning functions of OSM parsing output
+
+### Changed
+
+* clipping with osmconvert can now handle parentfiles > 2 GB
+
+### Fixed
+
+* Fix  [Issue #25](https://github.com/osm-flex/osm-flex/issues/25).
+* Fix  [Issue #15](https://github.com/osm-flex/osm-flex/issues/15).
 
 ## v1.0.1
 
