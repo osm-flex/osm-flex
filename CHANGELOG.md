@@ -1,5 +1,5 @@
 # Changelog
-## v1.2.0
+## v1.1.0
 
 Release date: 2023-11-21
 
