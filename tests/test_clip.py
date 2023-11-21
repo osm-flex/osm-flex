@@ -129,8 +129,6 @@ class TestClip(unittest.TestCase):
         expected_result = [str(OSMCONVERT_PATH),
          '/path/to/planet.osm.pbf',
          '-b=0,0,1,1',
-         '--complete-ways',
-         '--complete-multipolygons',
          '-o=/path/to/extract.osm.pbf']
         self.assertEqual(result, expected_result)
         
@@ -142,8 +140,6 @@ class TestClip(unittest.TestCase):
         expected_result = [str(OSMCONVERT_PATH),
          '/path/to/planet.osm.pbf',
          '-B=/path/to/shape.poly',
-         '--complete-ways',
-         '--complete-multipolygons',
          '-o=/path/to/extract.osm.pbf']
         self.assertEqual(result, expected_result)
         
