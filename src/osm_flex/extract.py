@@ -114,17 +114,20 @@ def extract(osm_path, geo_type, osm_keys, osm_query):
     LOGGER.debug("query: %s", query)
     sql_lyr = data.ExecuteSQL(query)
     features = []
+    geometry = []
     if data is not None:
         LOGGER.info('query is finished, lets start the loop')
         for feature in tqdm(sql_lyr, desc=f'extract {geo_type}'):
             try:
-                fields = [feature.GetField(key) for key in
-                          ['osm_id', *constraint_dict['osm_keys']]]
                 wkb = feature.geometry().ExportToWkb()
                 geom = shapely.wkb.loads(bytes(wkb))
                 if geom is None:
                     continue
-                fields.append(geom)
+                geometry.append(geom)
+                fields = [
+                    feature.GetField(key)
+                    for key in ["osm_id", *constraint_dict["osm_keys"]]
+                ]
                 features.append(fields)
             except Exception as exc:
                 LOGGER.info('%s - %s', exc.__class__, exc)
@@ -135,8 +138,11 @@ def extract(osm_path, geo_type, osm_keys, osm_query):
                      geometry - perhaps key is unknown.""")
 
     return gpd.GeoDataFrame(
-        features, columns=['osm_id', *constraint_dict['osm_keys'], 'geometry'],
-        crs='epsg:4326')
+        features,
+        columns=["osm_id", *constraint_dict['osm_keys']],
+        geometry=geometry,
+        crs="epsg:4326"
+    )
 
 # TODO: decide on name of wrapper, which categories included & what components fall under it.
 def extract_cis(osm_path, ci_type):
