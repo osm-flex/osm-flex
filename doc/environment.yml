@@ -1,0 +1,17 @@
+name: osm-flex
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - cartopy
+  - geopandas
+  - gdal
+  - numpy
+  - shapely>=2.0
+  - pandas
+  - tqdm
+  - jupyter
+  - nbsphinx
+  - sphinx
+  - sphinx-rtd-theme
+  - python=3.11
