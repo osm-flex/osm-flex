@@ -44,7 +44,7 @@ def remove_small_polygons(gdf, min_area):
                                           axis=1)
 
     return gdf_temp[(gdf_temp['geometry'].area > min_area) |
-                    (gdf_temp['geometry'].area == 0)]
+                    (gdf_temp['geometry'].area == 0)].reset_index(drop=True)
 
 
 def remove_contained_points(gdf_p_mp):
@@ -66,7 +66,7 @@ def remove_contained_points(gdf_p_mp):
                        (gdf_p_mp.geometry.type=='Polygon')],
               predicate='within').index)
 
-    return gdf_p_mp.drop(index=ind_dupl)
+    return gdf_p_mp.drop(index=ind_dupl).reset_index(drop=True)
 
 
 def remove_contained_polys(gdf):
@@ -96,7 +96,7 @@ def remove_contained_polys(gdf):
     subset = contained[contained.index != contained.index_right]
     to_drop = set(subset.index_right) - set(subset.index)
 
-    return gdf.drop(index=to_drop)
+    return gdf.drop(index=to_drop).reset_index(drop=True)
 
 
 def remove_exact_duplicates(gdf):
@@ -116,4 +116,4 @@ def remove_exact_duplicates(gdf):
 
     geom_wkb = gdf["geometry"].apply(lambda geom: geom.wkb)
 
-    return gdf.loc[geom_wkb.drop_duplicates().index]
+    return gdf.loc[geom_wkb.drop_duplicates().index].reset_index(drop=True)

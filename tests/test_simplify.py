@@ -16,6 +16,7 @@ import geopandas as gpd
 import shapely as sh
 from osm_flex.simplify import (remove_small_polygons, remove_contained_points,
                                remove_contained_polys, remove_exact_duplicates)
+from pandas.testing import assert_frame_equal
 from pathlib import Path
 
 PATH_TEST_DATA = Path(__file__).parent / 'data'
@@ -35,7 +36,7 @@ line2 = sh.LineString([[0.25, 0.25], [0.75, 0.75]])
 class TestSimplificationFunctions(unittest.TestCase):
     def test_remove_small_polygons(self):
         """ test function remove_small_polygons() """
-        
+
         gdf_small_poly = gpd.GeoDataFrame(
             geometry = [
                 point1,
@@ -43,71 +44,71 @@ class TestSimplificationFunctions(unittest.TestCase):
                 polygon1,
                 polygon2
             ])
-        
+
         gdf_no_small_poly = gpd.GeoDataFrame(
             geometry = [
                 point1,
                 line1,
                 polygon1,
             ])
-        
+
         # get rid of polygon2
         gdf_removed = remove_small_polygons(gdf_small_poly, 0.5)
-        
-        self.assertTrue((gdf_removed == gdf_no_small_poly).all().values[0])
-        
+
+        assert_frame_equal(gdf_removed, gdf_no_small_poly)
+
     def test_remove_contained_points(self):
         """ test function remove_contained_points() """
-        
+
         gdf_pnt_in_poly = gpd.GeoDataFrame(
             geometry = [polygon1, polygon2, point1, point2, line1
             ])
-        
+
         gdf_check  = gpd.GeoDataFrame(
             geometry = [polygon1, polygon2, point1,line1
             ])
-        
+
         # get rid of point2
         gdf_simple  = remove_contained_points(gdf_pnt_in_poly)
-        
-        self.assertTrue(
-            (gdf_check.geometry.values == gdf_simple.geometry.values).all())
-    
-    
+
+        assert_frame_equal(gdf_check, gdf_simple)
+
+
+
     def test_remove_contained_polys(self):
         """ test function remove_contained_polys() """
-        
+
         gdf_poly_in_poly = gpd.GeoDataFrame(
             geometry = [polygon1, polygon2, point1, point2, line1, line2
             ])
-        
+
         gdf_check  = gpd.GeoDataFrame(
             geometry = [polygon1, point1, point2, line1, line2
             ])
-        
+
         # get rid of polygon2
         gdf_simple = remove_contained_polys(gdf_poly_in_poly)
-        
-        self.assertTrue(
-            (gdf_check.geometry.values == gdf_simple.geometry.values).all())
-        
-    
+
+        assert_frame_equal(gdf_check, gdf_simple)
+
+
+
     def test_remove_exact_duplicates(self):
         """ test function remove_exact_duplicates() """
-        
+
         gdf_dupl = gpd.GeoDataFrame(
             geometry = [polygon1, polygon1, point1, point1, line1, line1
             ])
-        
+
         # get rid of polygon1, point1, line1
         gdf_simple = remove_exact_duplicates(gdf_dupl)
-        
+
         gdf_check  = gpd.GeoDataFrame(
             geometry = [polygon1, point1, line1
             ])
-        
-        self.assertTrue(
-            (gdf_check.geometry.values == gdf_simple.geometry.values).all())
+
+        assert_frame_equal(gdf_check, gdf_simple)
+
 
 if __name__ == "__main__":
     TESTS = unittest.TestLoader().loadTestsFromTestCase(TestSimplificationFunctions)
