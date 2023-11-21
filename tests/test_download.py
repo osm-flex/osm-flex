@@ -32,8 +32,8 @@ class TestDownload(unittest.TestCase):
         ):
             _create_gf_download_url("XXX", "pbf")
 
-        with self.assertRaisesRegex(NotImplementedError, "Invalid file format 'pdf'"):
-            _create_gf_download_url("DEU", "pdf")
+        with self.assertRaisesRegex(NotImplementedError, "Invalid file format 'abc'"):
+            _create_gf_download_url("DEU", "abc")
 
         url = _create_gf_download_url("DEU", "pbf")
         self.assertEqual(
