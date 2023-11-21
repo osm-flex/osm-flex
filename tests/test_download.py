@@ -30,7 +30,7 @@ class TestDownload(unittest.TestCase):
         with self.assertRaisesRegex(
             KeyError, "The provided iso3 seems not to be available on Geofabrik.de"
         ):
-            _create_gf_download_url("ATG", "pbf")
+            _create_gf_download_url("XXX", "pbf")
 
         with self.assertRaisesRegex(NotImplementedError, "Invalid file format 'pdf'"):
             _create_gf_download_url("DEU", "pdf")
