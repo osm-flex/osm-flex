@@ -165,5 +165,13 @@ def get_planet_file(save_path=Path(OSM_DATA_DIR,'planet-latest.osm.pbf'),
     Parameters
     ----------
     save_path : str or pathlib.Path
+        The path to store the file.
+
+    Returns
+    -------
+    save_path : Path
+        The path to the downloaded file. Returned for consistency with other download
+        functions.
     """
     _download_file(PLANET_URL, save_path, overwrite)
+    return Path(save_path)
