@@ -6,7 +6,8 @@ init file
 
 from pathlib import Path
 from .config import OSM_DIR, OSM_DATA_DIR, POLY_DIR, EXTRACT_DIR
-
+import logging
+logging.basicConfig(level=logging.INFO)
 
 def setup_osm_dirs():
     """
