@@ -14,7 +14,8 @@ Python package for flexible data extraction from OpenStreetMap. This packages al
 
 1. download OSM data dumps
 2. [optional] clip to desired shape
-2. extract specific features to geodataframes
+3. extract specific features to geodataframes
+4. [optional] simplify results based on geospatial operations
 
 ## Documentation
 
