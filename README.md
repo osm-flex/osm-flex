@@ -72,6 +72,12 @@ gdf_ch_forest = ex.extract(
 
 <img title="Forests" alt="Forest map " src="./doc/forest_ch.png">
 
+Drop all education building units that are contained within larger education buildings.
+
+```python
+import osm_flex.simplify as sy
+gdf_ch_education = sy.rremove_contained_polys(gdf_ch_education)
+```
 
 ## Running Tests
 

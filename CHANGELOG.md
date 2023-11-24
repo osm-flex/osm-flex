@@ -1,4 +1,24 @@
 # Changelog
+## v1.1.1
+
+Release date: 2023-11-24
+
+### Description
+
+Minor bug fixes and improvements to readthedocs. 
+
+
+### Changed
+
+* downloading a data dump returns save path.
+* readthedocs built is checked upon pull request 
+
+### Fixed
+
+* Fix  [Issue #12](https://github.com/osm-flex/osm-flex/issues/12).
+* readthedocs is built with mamba  
+
+
 ## v1.1.0
 
 Release date: 2023-11-21
