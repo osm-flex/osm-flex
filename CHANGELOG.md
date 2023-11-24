@@ -7,6 +7,9 @@ Release date: 2023-11-24
 
 Minor bug fixes and improvements to readthedocs. 
 
+### Added
+
+* Option to enable module-wide logging with `osm_flex.enable_logs()`.
 
 ### Changed
 
