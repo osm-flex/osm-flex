@@ -14,7 +14,8 @@ Python package for flexible data extraction from OpenStreetMap. This packages al
 
 1. download OSM data dumps
 2. [optional] clip to desired shape
-2. extract specific features to geodataframes
+3. extract specific features to geodataframes
+4. [optional] simplify results based on geospatial operations
 
 ## Documentation
 
@@ -71,6 +72,12 @@ gdf_ch_forest = ex.extract(
 
 <img title="Forests" alt="Forest map " src="./doc/forest_ch.png">
 
+Drop all education building units that are contained within larger education buildings.
+
+```python
+import osm_flex.simplify as sy
+gdf_ch_education = sy.rremove_contained_polys(gdf_ch_education)
+```
 
 ## Running Tests
 

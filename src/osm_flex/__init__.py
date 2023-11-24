@@ -6,6 +6,14 @@ init file
 
 from pathlib import Path
 from .config import OSM_DIR, OSM_DATA_DIR, POLY_DIR, EXTRACT_DIR
+import logging
+
+# Default to no logging
+logging.getLogger("osm_flex").addHandler(logging.NullHandler())
+
+def enable_logs(level=logging.INFO, **kwargs):
+    """Overwrite default and set basic logging config"""
+    logging.basicConfig(level=level, force=True, **kwargs)
 
 
 def setup_osm_dirs():

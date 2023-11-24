@@ -22,3 +22,4 @@ Contents
    Home <self>
    0_basic_usage
    1_clipping_shapes
+   2_simplifications

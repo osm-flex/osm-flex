@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "osm-flex"
-version = "1.1.0"
+version = "1.1.1"
 maintainers = [
   { name = "Elco Koks", email = "elco.koks@vu.nl" },
 ]
@@ -37,5 +37,5 @@ tests = ["pytest"]
 docs = ["jupyter"]
 
 [project.urls]
-"Repository" = "https://github.com/ElcoK/osm-flex"
-"Bug Tracker" = "https://github.com/ElcoK/osm-flex/issues"
+"Repository" = "https://github.com/osm-flex/osm-flex"
+"Bug Tracker" = "https://github.com/osm-flex/osm-flex/issues"
