@@ -23,10 +23,12 @@ Please refer to the [ReadTheDocs](https://osm-flex.readthedocs.io/en/latest/?bad
 
 ## Installation
 
+osm-flex is available from the [Python Package Index (PyPI)](https://pypi.org/project/osm-flex/) and from [conda-forge](https://anaconda.org/conda-forge/osm-flex).
+
+To manage all dependencies automatically, we recommend creating a new Conda environment:
 ```
-conda create -n osm-flex cartopy geopandas
+conda create -n osm-flex -c conda-forge osm-flex
 conda activate osm-flex
-pip install osm-flex
 ```
 
 ---
